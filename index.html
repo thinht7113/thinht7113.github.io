@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hoàng Đức Thịnh — Dev Portfolio</title>
+  <meta name="description" content="Portfolio của Hoàng Đức Thịnh: Python, AI, Tkinter, Flask/FastAPI, MySQL, ASP.NET, trực quan dữ liệu và UI/UX." />
+  <meta name="theme-color" content="#06b6d4" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          keyframes: {
+            float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+            shimmer: { '0%': { backgroundPosition: '0% 50%' }, '100%': { backgroundPosition: '100% 50%' } }
+          },
+          animation: { float: 'float 6s ease-in-out infinite', shimmer: 'shimmer 8s linear infinite' }
+        }
+      }
+    }
+  </script>
+  <!-- AOS (scroll animations) -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root { color-scheme: light dark; }
+    /* Gradient blobs background */
+    .blob { filter: blur(48px); opacity: .35; }
+    .glass { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); backdrop-filter: blur(10px); }
+    .dark .glass { background: rgba(17,24,39,.5); border-color: rgba(255,255,255,.12); }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 selection:bg-cyan-400/40">
+  <!-- Background effects -->
+  <div aria-hidden="true" class="pointer-events-none fixed inset-0 -z-10">
+    <div id="blob1" class="blob absolute -top-24 -left-24 h-[40rem] w-[40rem] rounded-full bg-cyan-500/40 animate-float"></div>
+    <div id="blob2" class="blob absolute top-48 -right-32 h-[36rem] w-[36rem] rounded-full bg-fuchsia-500/40"></div>
+    <div class="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-cyan-500/10 to-transparent"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 backdrop-blur border-b border-white/10 bg-slate-950/50">
+    <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+      <a href="#home" class="font-semibold tracking-tight">Hoàng Đức Thịnh</a>
+      <nav class="hidden md:flex items-center gap-6 text-sm text-slate-300">
+        <a href="#projects" class="hover:text-white">Projects</a>
+        <a href="#skills" class="hover:text-white">Skills</a>
+        <a href="#timeline" class="hover:text-white">Timeline</a>
+        <a href="#contact" class="hover:text-white">Contact</a>
+      </nav>
+      <div class="flex items-center gap-2">
+        <a id="gh" href="https://github.com/your-github" target="_blank" rel="noreferrer" class="p-2 rounded-xl hover:bg-white/5 text-slate-300 hover:text-white" aria-label="GitHub">
+          <i data-lucide="github" class="w-5 h-5"></i>
+        </a>
+        <a id="li" href="https://www.linkedin.com/in/your-linkedin/" target="_blank" rel="noreferrer" class="p-2 rounded-xl hover:bg-white/5 text-slate-300 hover:text-white" aria-label="LinkedIn">
+          <i data-lucide="linkedin" class="w-5 h-5"></i>
+        </a>
+        <button id="themeToggle" class="p-2 rounded-xl hover:bg-white/5 text-slate-300 hover:text-white" aria-label="Toggle theme">
+          <i data-lucide="sun" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section id="home" class="relative">
+    <div class="mx-auto max-w-6xl px-4 pt-16 pb-10 md:pt-24 md:pb-16">
+      <div class="grid md:grid-cols-2 gap-8 items-center">
+        <div data-aos="fade-up" class="space-y-6">
+          <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
+            <i data-lucide="line-chart" class="w-4 h-4"></i>
+            <span>Sáng tạo • Tối ưu • Hiệu năng</span>
+          </div>
+          <h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight">
+            Xin chào, mình là <span class="text-cyan-400">Hoàng Đức Thịnh</span>
+          </h1>
+          <p class="text-lg md:text-xl text-slate-300">
+            Xây dựng phần mềm quản lý kết quả học tập, AI dịch phụ đề, đồ thị dữ liệu – yêu thích UI/UX & hiệu năng.
+          </p>
+          <p class="text-base text-slate-400">Hiện tại: <span id="role" class="text-slate-200 font-medium">Python Developer</span></p>
+          <div class="flex flex-wrap gap-3">
+            <a href="#projects" class="inline-flex items-center gap-2 rounded-2xl bg-cyan-500/90 hover:bg-cyan-400 text-slate-950 font-semibold px-4 py-2 transition shadow">
+              Xem dự án <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </a>
+            <a href="#" id="cvLink" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-2xl border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 px-4 py-2 text-slate-200 transition">
+              <i data-lucide="download" class="w-4 h-4"></i> Tải CV
+            </a>
+            <a href="mailto:your.email@example.com" id="emailLink" class="inline-flex items-center gap-2 rounded-2xl border border-cyan-400/30 text-cyan-300 hover:text-cyan-950 hover:bg-cyan-300/90 px-4 py-2 transition">
+              <i data-lucide="mail" class="w-4 h-4"></i> Liên hệ nhanh
+            </a>
+          </div>
+        </div>
+
+        <div data-aos="fade-up" data-aos-delay="150" class="relative">
+          <div class="relative mx-auto aspect-square max-w-[24rem] rounded-[2.5rem] glass p-3 shadow-2xl overflow-hidden">
+            <div class="absolute inset-0 -z-10 opacity-40 bg-[radial-gradient(ellipse_at_top_left,rgba(56,189,248,0.45),transparent_50%),radial-gradient(ellipse_at_bottom_right,rgba(168,85,247,0.35),transparent_50%)]"></div>
+            <div class="h-full w-full rounded-2xl grid grid-cols-2 gap-3">
+              <div class="rounded-2xl glass p-4 hover:translate-y-[-6px] transition"><div class="text-cyan-300 mb-2"><i data-lucide="code-2" class="w-6 h-6"></i></div><div class="font-semibold">Python</div></div>
+              <div class="rounded-2xl glass p-4 hover:translate-y-[-6px] transition"><div class="text-cyan-300 mb-2"><i data-lucide="cpu" class="w-6 h-6"></i></div><div class="font-semibold">FastAPI</div></div>
+              <div class="rounded-2xl glass p-4 hover:translate-y-[-6px] transition"><div class="text-cyan-300 mb-2"><i data-lucide="database" class="w-6 h-6"></i></div><div class="font-semibold">MySQL</div></div>
+              <div class="rounded-2xl glass p-4 hover:translate-y-[-6px] transition"><div class="text-cyan-300 mb-2"><i data-lucide="smartphone" class="w-6 h-6"></i></div><div class="font-semibold">Mobile</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
+        <div class="rounded-2xl glass p-4 text-center" data-aos="fade-up"><div class="text-3xl font-bold">12</div><div class="text-xs text-slate-400 mt-1">Dự án cá nhân</div></div>
+        <div class="rounded-2xl glass p-4 text-center" data-aos="fade-up" data-aos-delay="50"><div class="text-3xl font-bold">150</div><div class="text-xs text-slate-400 mt-1">Người dùng thử</div></div>
+        <div class="rounded-2xl glass p-4 text-center" data-aos="fade-up" data-aos-delay="100"><div class="text-3xl font-bold">48</div><div class="text-xs text-slate-400 mt-1">Lần refactor</div></div>
+        <div class="rounded-2xl glass p-4 text-center" data-aos="fade-up" data-aos-delay="150"><div class="text-3xl font-bold">999</div><div class="text-xs text-slate-400 mt-1">Cốc cà phê</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" class="py-14 md:py-20">
+    <div class="mx-auto max-w-6xl px-4">
+      <h2 class="text-2xl md:text-3xl font-bold mb-6" data-aos="fade-up">Dự án nổi bật</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Project Card -->
+        <article class="group rounded-2xl glass p-4 hover:border-cyan-400/40 hover:bg-cyan-400/5 transition shadow" data-aos="fade-up">
+          <div class="aspect-video rounded-xl bg-gradient-to-br from-cyan-500/15 to-purple-500/10 mb-3"></div>
+          <h3 class="font-semibold text-lg mb-1">Quản lý Kết quả Học tập (Python + MySQL)</h3>
+          <p class="text-sm text-slate-300 mb-3">Ứng dụng client-server: nhập điểm Excel, tính TBC, xếp loại, biểu đồ; phân quyền SV/Admin.</p>
+          <div class="flex flex-wrap gap-2 mb-4 text-[11px] text-slate-300">
+            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1">Python</span>
+            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1">Tkinter</span>
+            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1">FastAPI</span>
+            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1">MySQL</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <a href="https://github.com/your-github/score-management" target="_blank" class="inline-flex items-center gap-2 text-sm text-cyan-300 hover:text-cyan-200">Xem repo <i data-lucide="external-link" class="w-4 h-4"></i></a>
+            <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="opacity-60 group-hover:opacity-100 transition text-xs">Lên đầu trang ↑</button>
+          </div>
+        </article>
+
+        <article class="group rounded-2xl glass p-4 hover:border-cyan-400/40 hover:bg-cyan-400/5 transition shadow" data-aos="fade-up" data-aos-delay="70">
+          <div class="aspect-video rounded-xl bg-gradient-to-br from-cyan-500/15 to-purple-500/10 mb-3"></div>
+          <h3 class="font-semibold text-lg mb-1">Dịch & Nhúng Phụ đề AI (Whisper + Gemini)</h3>
+          <p class="text-sm text-slate-300 mb-3">Nhận dạng tiếng Nhật, dịch ngữ cảnh sang Tiếng Việt, ghép phụ đề video bằng FFmpeg.</p>
+          <div class="flex flex-wrap gap-2 mb-4 text-[11px] text-slate-300">
+            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1">Whisper</span>
+            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1">Gemini API</span>
+            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1">FFmpeg</span>
+            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1">Tkinter</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <a href="https://github.com/your-github/ai-subtitle-tool" target="_blank" class="inline-flex items-center gap-2 text-sm text-cyan-300 hover:text-cyan-200">Xem repo <i data-lucide="external-link" class="w-4 h-4"></i></a>
+            <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="opacity-60 group-hover:opacity-100 transition text-xs">Lên đầu trang ↑</button>
+          </div>
+        </article>
+
+        <article class="group rounded-2xl glass p-4 hover:border-cyan-400/40 hover:bg-cyan-400/5 transition shadow" data-aos="fade-up" data-aos-delay="140">
+          <div class="aspect-video rounded-xl bg-gradient-to-br from-cyan-500/15 to-purple-500/10 mb-3"></div>
+          <h3 class="font-semibold text-lg mb-1">Website Quản lý Sách (ASP.NET Web Forms)</h3>
+          <p class="text-sm text-slate-300 mb-3">CRUD sách, thể loại, người dùng; upload ảnh bìa; SQL Server. Giao diện thân thiện.</p>
+          <div class="flex flex-wrap gap-2 mb-4 text-[11px] text-slate-300">
+            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1">ASP.NET</span>
+            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1">Web Forms</span>
+            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1">SQL Server</span>
+            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1">C#</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <a href="https://github.com/your-github/book-management-webforms" target="_blank" class="inline-flex items-center gap-2 text-sm text-cyan-300 hover:text-cyan-200">Xem repo <i data-lucide="external-link" class="w-4 h-4"></i></a>
+            <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="opacity-60 group-hover:opacity-100 transition text-xs">Lên đầu trang ↑</button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="py-14 md:py-20 bg-gradient-to-b from-transparent to-white/5">
+    <div class="mx-auto max-w-6xl px-4">
+      <h2 class="text-2xl md:text-3xl font-bold mb-6" data-aos="fade-up">Kỹ năng & Công cụ</h2>
+      <div class="grid md:grid-cols-4 gap-6">
+        <div class="rounded-2xl glass p-4" data-aos="fade-up">
+          <div class="flex items-center gap-2 mb-2 text-slate-200"><i data-lucide="code-2" class="w-5 h-5 text-cyan-300"></i><h3 class="font-semibold">Ngôn ngữ</h3></div>
+          <div class="flex flex-wrap gap-2 text-[11px] text-slate-300">
+            <span class="chip">Python</span><span class="chip">C#</span><span class="chip">Java</span><span class="chip">PHP</span><span class="chip">JavaScript</span>
+          </div>
+        </div>
+        <div class="rounded-2xl glass p-4" data-aos="fade-up" data-aos-delay="60">
+          <div class="flex items-center gap-2 mb-2 text-slate-200"><i data-lucide="cpu" class="w-5 h-5 text-cyan-300"></i><h3 class="font-semibold">Framework/Lib</h3></div>
+          <div class="flex flex-wrap gap-2 text-[11px] text-slate-300">
+            <span class="chip">Tkinter</span><span class="chip">Flask/FastAPI</span><span class="chip">ASP.NET Web Forms</span><span class="chip">Pandas</span><span class="chip">Matplotlib</span>
+          </div>
+        </div>
+        <div class="rounded-2xl glass p-4" data-aos="fade-up" data-aos-delay="120">
+          <div class="flex items-center gap-2 mb-2 text-slate-200"><i data-lucide="database" class="w-5 h-5 text-cyan-300"></i><h3 class="font-semibold">Cơ sở dữ liệu</h3></div>
+          <div class="flex flex-wrap gap-2 text-[11px] text-slate-300">
+            <span class="chip">MySQL/XAMPP</span><span class="chip">SQLite</span><span class="chip">SQL Server</span>
+          </div>
+        </div>
+        <div class="rounded-2xl glass p-4" data-aos="fade-up" data-aos-delay="180">
+          <div class="flex items-center gap-2 mb-2 text-slate-200"><i data-lucide="smartphone" class="w-5 h-5 text-cyan-300"></i><h3 class="font-semibold">Quan tâm</h3></div>
+          <div class="flex flex-wrap gap-2 text-[11px] text-slate-300">
+            <span class="chip">Mobile Dev</span><span class="chip">UI/UX</span><span class="chip">AI tích hợp</span><span class="chip">Tối ưu hiệu năng</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section id="timeline" class="py-14 md:py-20">
+    <div class="mx-auto max-w-6xl px-4">
+      <h2 class="text-2xl md:text-3xl font-bold mb-6" data-aos="fade-up">Lộ trình phát triển</h2>
+      <div class="relative pl-6">
+        <div class="absolute left-2 top-0 bottom-0 w-px bg-gradient-to-b from-cyan-400/60 via-white/10 to-purple-400/60"></div>
+        <div class="space-y-6">
+          <div class="relative rounded-2xl glass p-4" data-aos="fade-right">
+            <div class="absolute -left-2 top-4 h-3 w-3 rounded-full bg-cyan-400 shadow-[0_0_0_4px_rgba(56,189,248,0.15)]"></div>
+            <div class="text-xs text-slate-400">2025</div>
+            <div class="font-semibold">Client–Server học tập & tư vấn lộ trình</div>
+            <div class="text-sm text-slate-300">Thiết kế kiến trúc, API, trực quan dữ liệu; build .exe bằng Tkinter.</div>
+          </div>
+          <div class="relative rounded-2xl glass p-4" data-aos="fade-right" data-aos-delay="80">
+            <div class="absolute -left-2 top-4 h-3 w-3 rounded-full bg-cyan-400 shadow-[0_0_0_4px_rgba(56,189,248,0.15)]"></div>
+            <div class="text-xs text-slate-400">2024</div>
+            <div class="font-semibold">Quản lý điểm – bản online</div>
+            <div class="text-sm text-slate-300">Chuyển CRUD và biểu đồ lên backend Flask/FastAPI + MySQL.</div>
+          </div>
+          <div class="relative rounded-2xl glass p-4" data-aos="fade-right" data-aos-delay="160">
+            <div class="absolute -left-2 top-4 h-3 w-3 rounded-full bg-cyan-400 shadow-[0_0_0_4px_rgba(56,189,248,0.15)]"></div>
+            <div class="text-xs text-slate-400">2023</div>
+            <div class="font-semibold">Website Quản lý Sách (ASP.NET)</div>
+            <div class="text-sm text-slate-300">Hoàn thiện tính năng, tối ưu SQL Server và UX.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="py-14 md:py-20 bg-gradient-to-t from-transparent to-white/5">
+    <div class="mx-auto max-w-6xl px-4">
+      <h2 class="text-2xl md:text-3xl font-bold mb-6" data-aos="fade-up">Liên hệ</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="rounded-2xl glass p-4" data-aos="fade-up">
+          <p class="text-slate-300 mb-3">Mình sẵn sàng cho dự án thú vị, hợp tác nghiên cứu, hoặc cơ hội thực tập.</p>
+          <a href="mailto:your.email@example.com" class="inline-flex items-center gap-2 rounded-2xl bg-cyan-500/90 hover:bg-cyan-400 text-slate-950 font-semibold px-4 py-2 transition shadow"><i data-lucide="mail" class="w-4 h-4"></i> Gửi email</a>
+          <div class="mt-3 text-sm text-slate-400">your.email@example.com</div>
+        </div>
+
+        <form id="contactForm" class="rounded-2xl glass p-4 grid gap-3" data-aos="fade-up" data-aos-delay="80">
+          <input name="name" placeholder="Tên của bạn" class="w-full rounded-xl bg-slate-900/60 border border-white/10 px-3 py-2 text-sm focus:border-cyan-400/40 outline-none" required />
+          <textarea name="message" rows="5" placeholder="Lời nhắn..." class="w-full rounded-xl bg-slate-900/60 border border-white/10 px-3 py-2 text-sm focus:border-cyan-400/40 outline-none" required></textarea>
+          <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-cyan-500/90 hover:bg-cyan-400 text-slate-950 font-semibold px-4 py-2 transition shadow">Gửi</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-10 border-t border-white/10 text-center text-sm text-slate-400">
+    <div class="mx-auto max-w-6xl px-4">© <span id="year"></span> Hoàng Đức Thịnh. Xây bằng HTML + TailwindCSS + AOS.</div>
+  </footer>
+
+  <script>
+    // ===== Config nhanh (sửa các dòng TODO) =====
+    const PROFILE = {
+      name: 'Hoàng Đức Thịnh',
+      roles: ['Sinh viên CNTT','Python Developer','AI tinkerer','Mobile learner'],
+      email: 'your.email@example.com', // TODO: đổi email thật
+      github: 'https://github.com/your-github', // TODO: đổi link GitHub
+      linkedin: 'https://www.linkedin.com/in/your-linkedin/', // TODO: đổi link LinkedIn
+      cv: '#', // TODO: link CV PDF/Drive
+    };
+
+    // ===== Theme toggle + persist =====
+    const html = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') html.classList.remove('dark');
+    themeToggle.addEventListener('click', () => {
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+      themeToggle.innerHTML = html.classList.contains('dark') ? '<i data-lucide="sun" class="w-5 h-5"></i>' : '<i data-lucide="moon" class="w-5 h-5"></i>';
+      lucide.createIcons();
+    });
+
+    // ===== Role typing / rotating =====
+    const roleEl = document.getElementById('role');
+    let idx = 0;
+    function rotateRole(){
+      roleEl.classList.add('opacity-0','translate-y-1','transition');
+      setTimeout(()=>{
+        idx = (idx + 1) % PROFILE.roles.length;
+        roleEl.textContent = PROFILE.roles[idx];
+        roleEl.classList.remove('opacity-0','translate-y-1');
+      },220);
+    }
+    setInterval(rotateRole, 2200);
+
+    // ===== Populate links =====
+    document.getElementById('gh').href = PROFILE.github;
+    document.getElementById('li').href = PROFILE.linkedin;
+    document.getElementById('cvLink').href = PROFILE.cv;
+    document.getElementById('emailLink').href = `mailto:${PROFILE.email}`;
+
+    // ===== Contact form (mailto) =====
+    document.getElementById('contactForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const name = e.target.name.value.trim();
+      const msg = e.target.message.value.trim();
+      window.location.href = `mailto:${PROFILE.email}?subject=Liên hệ từ ${encodeURIComponent(name)}&body=${encodeURIComponent(msg)}`;
+    });
+
+    // ===== Year =====
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ===== Parallax blobs =====
+    const b1 = document.getElementById('blob1');
+    const b2 = document.getElementById('blob2');
+    window.addEventListener('pointermove', (e)=>{
+      const x = e.clientX / window.innerWidth - .5;
+      const y = e.clientY / window.innerHeight - .5;
+      b1.style.transform = `translate(${x * 30}px, ${y * 30}px)`;
+      b2.style.transform = `translate(${x * -40}px, ${y * -20}px)`;
+    });
+  </script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>AOS.init({ once: true, offset: 60, duration: 600 }); lucide.createIcons();</script>
+</body>
+</html>
