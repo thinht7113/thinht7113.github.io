@@ -16,9 +16,22 @@
             integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
             crossorigin="anonymous"
         />
+        <style>
+            .min-height{
+                min-height: 70px;
+            }
+            .table thead th { background: #f8f9fa; }
+            .status { white-space: nowrap; }
+            .sidebar-title { font-weight: 600; }
+            .fake-img { aspect-ratio: 4/3; object-fit: cover; }
+            .lead-small { font-size: .95rem; color:#6c757d; }
+            header .navbar { min-height: 60px; }
+            footer { min-height: 60px; }
+        </style>
     </head>
 
     <body>
+        <h3>Bài 1.1</h3>
         <div class="container">
             <h1 class="mt-5">Hello, world!</h1>
             <p class="lead">
@@ -27,9 +40,11 @@
             <button type="button" class="btn btn-primary">Primary Button</button>
         </div>
 
+         <h3>Bài 1.2</h3>
         <div class="container bg-primary text-white p-3 mb-3">Đây là container cố định</div>
         <div class="container-fluid bg-success text-white p-3">Đây là container toàn chiều rộng</div>
 
+         <h3>Bài 1.3</h3>
         <div class="row">
             <div class="col-12 col-sm-6 col-md-3 bg-primary text-white p-3 mb-3">
                 .col-md-3
@@ -44,7 +59,8 @@
                 .col-md-3
             </div>
         </div>
-        
+
+        <h3>Bài 1.4</h3>
         <div>
             <div class="container-sm bg-primary text-white p-3 mb-3">
                 .col-md-3
@@ -59,6 +75,8 @@
                 .col-md-3
             </div>
         </div>
+
+         <h3>Bài 1.5.a</h3>
         <div class="container mt-4">
             <div class="row g-3">
                 <div class="col-8">
@@ -84,7 +102,7 @@
             </div>
         </div>
 
-
+        <h3>Bài 1.5.b</h3>
         <div class="container mt-4">
         <div class="row g-3">
             <div class="col-3">
@@ -128,6 +146,7 @@
         </div>
         </div>
 
+        <h3>Bài 1.5.c</h3>
         <div class="container mt-4">
             <div class="row g-3 ">
                 <div class="col-6">
@@ -155,6 +174,7 @@
             </div>
         </div>
 
+        <h3>Bài 1.5.d</h3>
         <div class="container mt-3">
             <div class="row g-3">
                 <div class="col-4">
@@ -191,6 +211,7 @@
             </div>
         </div>
 
+        <h3>Bài 1.6.a</h3>
         <div class="container mt-3">
             <div class="col-12">
                 <div class="p-3 border bg-light" style="min-height: 150px;text-align: center;">
@@ -214,6 +235,7 @@
             </div>
         </div>
         
+        <h3>Bài 1.6.b</h3>
         <div class="container mt-3">
             <div class="row g-3">
                 <div class="col-3 bg-light border" style="min-height: 400px;">
@@ -263,6 +285,272 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <h3>Bài 1.6.c</h3>
+        <div class="container ">
+            <div class="row mt-4 bg-light border">
+                <div class="col-2 min-height d-flex justify-content-center align-items-center ">Logo</div>
+                <div class="col-2 min-height d-flex justify-content-center align-items-center">Home</div>
+                <div class="col-2 min-height d-flex justify-content-center align-items-center">About</div>
+                <div class="col-2 min-height"></div>
+                <div class="col-2 min-height"></div>
+                <div class="col-2 min-height"></div>
+            </div>
+            <div class="row">
+                <div class="col-3 bg-light border" style="min-height: 300px;">
+                    <ul class="list-unstyled m-3">
+                        <li class="d-flex justify-content-center align-items-center">link</li>
+                        <li class="d-flex justify-content-center align-items-center">link</li>
+                        <li class="d-flex justify-content-center align-items-center">link</li>
+                    </ul>
+                </div>
+                <div class="col-9 bg-light border ">
+                    <h2>Wellcome</h2>
+                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis eaque odit nesciunt provident. Odio exercitationem ab molestiae, aliquam ullam consectetur vel deleniti adipisci, inventore rerum ipsa modi, qui quasi explicabo.</p>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center align-items-center bg-light border" style="min-height: 50px;">Footer text</div>
+        </div>
+
+        <h3>Bai1.7.a</h3>
+        <div class="container py-4">
+            <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-secondary" style="width:56px">#</th>
+                            <th>Bill</th>
+                            <th style="width:180px">Payment Date</th>
+                            <th style="width:220px">Payment Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-active">
+                        <td>1</td>
+                        <td>Credit Card</td>
+                        <td>04/07/2021</td>
+                        <td class="status">Waiting for statement</td>
+                        </tr>
+
+                        <tr class="table-danger">
+                        <td>2</td>
+                        <td>Insurance</td>
+                        <td>02/07/2021</td>
+                        <td class="status">Cancelled</td>
+                        </tr>
+
+                        <tr class="table-success">
+                        <td>3</td>
+                        <td>Water</td>
+                        <td>01/07/2021</td>
+                        <td class="status">Paid</td>
+                        </tr>
+
+                        <tr class="table-info">
+                        <td>4</td>
+                        <td>Internet</td>
+                        <td>05/07/2021</td>
+                        <td class="status">Change plan</td>
+                        </tr>
+
+                        <tr class="table-warning">
+                        <td>5</td>
+                        <td>Electricity</td>
+                        <td>03/07/2021</td>
+                        <td class="status">Pending</td>
+                        </tr>
+
+                        <tr class="table-secondary">
+                        <td>6</td>
+                        <td>Telephone</td>
+                        <td>06/07/2021</td>
+                        <td class="status">Due</td>
+                        </tr>
+
+                        <tr class="table-primary">
+                        <td>7</td>
+                        <td>Car Service</td>
+                        <td>08/07/2021</td>
+                        <td class="status">Call in to confirm</td>
+                        </tr>
+
+                        <tr class="table-dark text-white">
+                        <td>8</td>
+                        <td>Gas</td>
+                        <td>06/07/2021</td>
+                        <td class="status">Payment failed</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h3>Bai1.7.b</h3>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                <th style="width:70px">STT</th>
+                <th style="min-width:120px">Họ</th>
+                <th style="min-width:120px">Tên</th>
+                <th style="min-width:260px">Email</th>
+                <th style="min-width:280px">Ghi chú</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>1</td>
+                <td>Nguyễn</td>
+                <td>Mai Lan</td>
+                <td>nguyen.lan@sinhvien.edu.vn</td>
+                <td>Sinh viên năm 3 ngành CNTT</td>
+                </tr>
+                <tr>
+                <td>2</td>
+                <td>Trần</td>
+                <td>Công Minh</td>
+                <td>tran.minh@sinhvien.edu.vn</td>
+                <td>Thành viên CLB lập trình</td>
+                </tr>
+                <tr>
+                <td>3</td>
+                <td>Phạm</td>
+                <td>Thu Huyền</td>
+                <td>pham.huyen@sinhvien.edu.vn</td>
+                <td>Quan tâm đến Trí tuệ nhân tạo</td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        <h3>Bài 1.8</h3>
+        <div class="container">
+            <header>
+                <nav class="navbar navbar-dark bg-dark">
+                <div class="container">
+                <ul class="navbar-nav flex-row gap-3">
+                    <li class="nav-item">
+                    <a class="nav-link active" href="#">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="#">Giới thiệu</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="#">Quản lý</a>
+                    </li>
+                </ul>
+                </div>
+            </nav>
+            </header>
+
+            <main class="container py-4">
+                <div class="row g-4">
+                <aside class="col-lg-4">
+                    <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title sidebar-title">Giới thiệu nhóm</h5>
+                        <p class="mb-1">Hình ảnh nhóm:</p>
+                        <img src="https://picsum.photos/600/450?random=3" alt="Hình nhóm" class="img-fluid rounded border fake-img mb-2">
+                        <p class="text-muted mb-0"><small>Đây là mô tả về hình ảnh…</small></p>
+                    </div>
+                    </div>
+
+                    <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title sidebar-title">Các liên kết</h5>
+                        <ul class="list-group">
+                        <li class="list-group-item active">Giảng viên</li>
+                        <li class="list-group-item">Sinh viên</li>
+                        <li class="list-group-item">Cựu Sinh viên</li>
+                        <li class="list-group-item">Khác</li>
+                        </ul>
+                    </div>
+                    </div>
+                </aside>
+
+                <section class="col-lg-8">
+                    <div class="mb-4">
+                    <h4 class="fw-bold">DANH SÁCH THÀNH VIÊN</h4>
+                    <p class="lead-small">Giới thiệu nhóm…</p>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                            <th style="width: 30%">Họ</th>
+                            <th style="width: 25%">Tên</th>
+                            <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                            <td>Lê Văn</td>
+                            <td>Thắng</td>
+                            <td>lvthang@gmail.com</td>
+                            </tr>
+                            <tr>
+                            <td>Nguyễn Văn</td>
+                            <td>Hưng</td>
+                            <td>hungvn@gmail.com</td>
+                            </tr>
+                            <tr>
+                            <td>Phạm Thị Thúy</td>
+                            <td>Dung</td>
+                            <td>dungpt@gmail.com</td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                    </div>
+
+                    <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold mb-3">Đăng ký thành viên</h5>
+
+                        <form class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="fullname" class="form-label">Họ và tên</label>
+                            <input type="text" id="fullname" class="form-control" placeholder="Họ và Tên không rỗng" required>
+                            <div class="form-text">Họ và tên không rỗng</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" class="form-control" placeholder="Nhập địa chỉ mail hợp lệ" required>
+                            <div class="form-text">Nhập địa chỉ mail hợp lệ</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mật khẩu</label>
+                            <input type="password" id="password" class="form-control" placeholder="Mật khẩu đúng, ví dụ Abc@1234" minlength="8" required>
+                            <div class="form-text">Mật khẩu đúng, ví dụ Abc@1234</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="repassword" class="form-label">Nhập lại MK</label>
+                            <input type="password" id="repassword" class="form-control" placeholder="Nhập lại mật khẩu" required>
+                            <div class="form-text">Nhập lại mật khẩu</div>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="remember">
+                            <label class="form-check-label" for="remember">Ghi nhớ</label>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Đăng ký</button>
+                            <button type="reset" class="btn btn-secondary">Hủy</button>
+                        </div>
+                        </form>
+                    </div>
+                    </div>
+                </section>
+                </div>
+            </main>
+
+            <footer class="bg-dark d-flex align-items-center justify-content-center text-white">
+                <div class="container text-center py-3">Footer</div>
+            </footer>
         </div>
         <script
             src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
