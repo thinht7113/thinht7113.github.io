@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="vi" data-bs-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TechNews — Blog Tin Tức (Bootstrap Thuần)</title>
+  <meta name="description" content="Mẫu blog tin tức hiện đại, thuần Bootstrap 5, tối ưu SEO, có Dark Mode, Carousel, Offcanvas, Sidebar, Pagination.">
+  <meta name="keywords" content="bootstrap, blog, tin tức, responsive, dark mode, news, template">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .shadow-soft { box-shadow: 0 6px 24px rgba(0,0,0,.06); }
+    .category-chip { font-size: .75rem; }
+    .scroll-x { overflow-x: auto; }
+    .scroll-x::-webkit-scrollbar { height: 6px; }
+    .scroll-x::-webkit-scrollbar-thumb { background: rgba(0,0,0,.2); border-radius: 3px; }
+    .back-to-top { position: fixed; right: 1rem; bottom: 1rem; z-index: 1030; display: none; }
+    .ratio-21x9 { --bs-aspect-ratio: 42.857%; }
+  </style>
+</head>
+<body>
+  <div class="bg-body-secondary small py-1 d-none d-lg-block">
+    <div class="container d-flex align-items-center justify-content-between">
+      <div class="d-flex gap-3">
+        <span><i class="bi bi-clock"></i> <span id="now"></span></span>
+        <span class="text-truncate" style="max-width: 420px"><i class="bi bi-megaphone"></i> Tin mới: Bootstrap 5.3 hỗ trợ Color Modes!</span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-sm btn-outline-secondary" id="themeToggle" aria-label="Đổi giao diện"><i class="bi bi-moon-stars"></i></button>
+        <a class="link-body-emphasis text-decoration-none" href="#subscribeModal" data-bs-toggle="modal"><i class="bi bi-envelope"></i> Đăng ký bản tin</a>
+      </div>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary border-bottom">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">Tech<span class="text-primary">News</span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNav" aria-controls="offcanvasNav" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Trang chủ</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Chuyên mục</a>
+            <ul class="dropdown-menu shadow-soft p-3" style="min-width: 540px">
+              <div class="row g-3">
+                <div class="col-6">
+                  <li class="dropdown-header">Công nghệ</li>
+                  <li><a class="dropdown-item" href="#">AI &amp; Machine Learning</a></li>
+                  <li><a class="dropdown-item" href="#">Lập trình</a></li>
+                  <li><a class="dropdown-item" href="#">Phần cứng</a></li>
+                  <li><a class="dropdown-item" href="#">DevOps &amp; Cloud</a></li>
+                </div>
+                <div class="col-6">
+                  <li class="dropdown-header">Đời sống số</li>
+                  <li><a class="dropdown-item" href="#">Startup</a></li>
+                  <li><a class="dropdown-item" href="#">Kinh doanh</a></li>
+                  <li><a class="dropdown-item" href="#">Khoa học</a></li>
+                  <li><a class="dropdown-item" href="#">Review</a></li>
+                </div>
+              </div>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="#about">Giới thiệu</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Liên hệ</a></li>
+        </ul>
+        <form class="d-flex" role="search" onsubmit="event.preventDefault(); openSearch()">
+          <input class="form-control me-2 d-none d-lg-block" type="search" placeholder="Tìm bài viết..." aria-label="Search">
+          <button class="btn btn-outline-primary d-none d-lg-inline-flex" type="submit"><i class="bi bi-search me-1"></i>Tìm</button>
+          <button class="btn btn-outline-secondary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSearch"><i class="bi bi-search"></i></button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNav" aria-labelledby="offcanvasNavLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasNavLabel">Menu</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <ul class="navbar-nav flex-grow-1">
+        <li class="nav-item"><a class="nav-link" href="#">Trang chủ</a></li>
+        <li class="nav-item"><a class="nav-link" href="#categories">Chuyên mục</a></li>
+        <li class="nav-item"><a class="nav-link" href="#about">Giới thiệu</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">Liên hệ</a></li>
+      </ul>
+      <hr>
+      <div>
+        <button class="btn btn-outline-secondary w-100 mb-2" id="themeToggleMobile"><i class="bi bi-brightness-high"></i> Đổi giao diện</button>
+        <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#subscribeModal"><i class="bi bi-envelope"></i> Đăng ký bản tin</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasSearch" aria-labelledby="offcanvasSearchLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasSearchLabel">Tìm kiếm</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="input-group mb-3">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control" placeholder="Nhập từ khóa...">
+        <button class="btn btn-primary" type="button">Tìm</button>
+      </div>
+      <p class="text-muted small">Gợi ý: “AI”, “Bootstrap”, “DevOps”, “Review laptop”...</p>
+    </div>
+  </div>
+
+  <section class="container py-4 py-lg-5">
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div id="featuredCarousel" class="carousel slide shadow-soft rounded overflow-hidden">
+          <div class="carousel-indicators">
+            <button type="button" data-bs-target="#featuredCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#featuredCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#featuredCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          </div>
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <div class="ratio ratio-21x9 bg-secondary-subtle">
+                <img src="https://picsum.photos/1200/520?random=1" class="w-100 h-100 object-fit-cover" alt="featured-1">
+              </div>
+              <div class="carousel-caption text-start bg-body text-body rounded-3 p-3 shadow">
+                <span class="badge text-bg-primary me-2">AI</span>
+                <h5 class="mb-2">Top xu hướng AI năm 2025 thay đổi cách bạn học & làm việc</h5>
+                <p class="line-clamp-2 mb-2">Từ tác nhân tự động (agents) đến mô hình đa phương thức, hệ sinh thái AI đang bùng nổ với vô số công cụ dành cho lập trình viên.</p>
+                <a href="#article" class="btn btn-sm btn-primary">Đọc ngay</a>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="ratio ratio-21x9">
+                <img src="https://picsum.photos/1200/520?random=2" class="w-100 h-100 object-fit-cover" alt="featured-2">
+              </div>
+              <div class="carousel-caption text-start bg-body text-body rounded-3 p-3 shadow">
+                <span class="badge text-bg-success me-2">DevOps</span>
+                <h5 class="mb-2">CI/CD thông minh: 10 mẹo tăng tốc build & deploy</h5>
+                <p class="line-clamp-2 mb-2">Tận dụng cache, parallel jobs, và feature flags để rút ngắn thời gian đưa sản phẩm đến tay người dùng.</p>
+                <a href="#article" class="btn btn-sm btn-success">Khám phá</a>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="ratio ratio-21x9">
+                <img src="https://picsum.photos/1200/520?random=3" class="w-100 h-100 object-fit-cover" alt="featured-3">
+              </div>
+              <div class="carousel-caption text-start bg-body text-body rounded-3 p-3 shadow">
+                <span class="badge text-bg-warning me-2">Review</span>
+                <h5 class="mb-2">Laptop mỏng nhẹ cho dev: chọn sao để không hối hận?</h5>
+                <p class="line-clamp-2 mb-2">GPU rời hay iGPU, RAM bao nhiêu là đủ, và những điều nhà bán hàng ít nói.</p>
+                <a href="#article" class="btn btn-sm btn-warning">Xem gợi ý</a>
+              </div>
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="p-4 rounded bg-body-tertiary h-100 shadow-soft">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 class="mb-0">Đang thịnh hành</h5>
+            <a href="#" class="link-primary small">Xem tất cả</a>
+          </div>
+          <div class="d-flex gap-3 scroll-x pb-2">
+            <a href="#" class="btn btn-outline-dark btn-sm flex-shrink-0">#AI</a>
+            <a href="#" class="btn btn-outline-dark btn-sm flex-shrink-0">#LậpTrình</a>
+            <a href="#" class="btn btn-outline-dark btn-sm flex-shrink-0">#DevOps</a>
+            <a href="#" class="btn btn-outline-dark btn-sm flex-shrink-0">#Cloud</a>
+            <a href="#" class="btn btn-outline-dark btn-sm flex-shrink-0">#KhoaHọc</a>
+            <a href="#" class="btn btn-outline-dark btn-sm flex-shrink-0">#Review</a>
+            <a href="#" class="btn btn-outline-dark btn-sm flex-shrink-0">#Startup</a>
+          </div>
+          <hr>
+          <div class="list-group list-group-flush">
+            <a href="#article" class="list-group-item list-group-item-action">
+              <div class="d-flex w-100 justify-content-between">
+                <h6 class="mb-1">Docker Compose tips 2025</h6>
+                <small>3 phút trước</small>
+              </div>
+              <p class="mb-1 line-clamp-2">Khai thác healthcheck, profile & extension fields để quản lý môi trường phức tạp.</p>
+              <small class="text-body-secondary">DevOps</small>
+            </a>
+            <a href="#article" class="list-group-item list-group-item-action">
+              <div class="d-flex w-100 justify-content-between">
+                <h6 class="mb-1">React Server Components: nên hay không?</h6>
+                <small>1 giờ trước</small>
+              </div>
+              <p class="mb-1 line-clamp-2">Phân tích trade-off hiệu năng vs. độ phức tạp kiến trúc.</p>
+              <small class="text-body-secondary">Frontend</small>
+            </a>
+            <a href="#article" class="list-group-item list-group-item-action">
+              <div class="d-flex w-100 justify-content-between">
+                <h6 class="mb-1">Benchmark GPU cho học máy tiêu dùng</h6>
+                <small>Hôm qua</small>
+              </div>
+              <p class="mb-1 line-clamp-2">So sánh VRAM, băng thông và FP16/FP8 cho fine-tuning nhỏ gọn.</p>
+              <small class="text-body-secondary">AI</small>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="categories" class="container pb-3">
+    <div class="d-flex flex-wrap gap-2 align-items-center">
+      <span class="fw-semibold">Chọn chủ đề:</span>
+      <a href="#" class="badge text-bg-primary text-decoration-none category-chip">AI</a>
+      <a href="#" class="badge text-bg-success text-decoration-none category-chip">DevOps</a>
+      <a href="#" class="badge text-bg-danger text-decoration-none category-chip">Security</a>
+      <a href="#" class="badge text-bg-warning text-decoration-none category-chip">Review</a>
+      <a href="#" class="badge text-bg-info text-decoration-none category-chip">Khoa học</a>
+      <a href="#" class="badge text-bg-dark text-decoration-none category-chip">Startup</a>
+      <a href="#" class="badge text-bg-secondary text-decoration-none category-chip">Hướng dẫn</a>
+    </div>
+  </section>
+
+  <main class="container py-4">
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <ul class="nav nav-tabs" id="postTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="latest-tab" data-bs-toggle="tab" data-bs-target="#latest" type="button" role="tab" aria-controls="latest" aria-selected="true">Mới nhất</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="popular-tab" data-bs-toggle="tab" data-bs-target="#popular" type="button" role="tab" aria-controls="popular" aria-selected="false">Phổ biến</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="editors-tab" data-bs-toggle="tab" data-bs-target="#editors" type="button" role="tab" aria-controls="editors" aria-selected="false">Biên tập chọn</button>
+          </li>
+        </ul>
+        <div class="tab-content pt-3" id="postTabsContent">
+          <div class="tab-pane fade show active" id="latest" role="tabpanel" aria-labelledby="latest-tab">
+            <div class="row g-4">
+              <div class="col-md-6">
+                <article class="card h-100 shadow-soft">
+                  <div class="ratio ratio-16x9">
+                    <img src="https://picsum.photos/640/360?random=11" class="card-img-top object-fit-cover" alt="thumb">
+                  </div>
+                  <div class="card-body d-flex flex-column">
+                    <div class="d-flex gap-2 mb-2">
+                      <span class="badge text-bg-primary">AI</span>
+                      <span class="badge text-bg-secondary">Hướng dẫn</span>
+                    </div>
+                    <h5 class="card-title">Tự động hoá với tác nhân AI: xây từ con số 0</h5>
+                    <p class="card-text line-clamp-3">Mô hình tỷ lệ nhỏ (small LLM) + workflow điều phối cho phép bạn tạo tác nhân chạy việc thật, tiết kiệm chi phí.</p>
+                    <div class="mt-auto d-flex align-items-center justify-content-between">
+                      <small class="text-body-secondary">5 phút đọc • 12/09/2025</small>
+                      <div class="btn-group">
+                        <a href="#article" class="btn btn-sm btn-primary">Đọc</a>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="saveBookmark('Tự động hoá với tác nhân AI')"><i class="bi bi-bookmark"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+              <div class="col-md-6">
+                <article class="card h-100 shadow-soft">
+                  <div class="ratio ratio-16x9">
+                    <img src="https://picsum.photos/640/360?random=12" class="card-img-top object-fit-cover" alt="thumb">
+                  </div>
+                  <div class="card-body d-flex flex-column">
+                    <div class="d-flex gap-2 mb-2">
+                      <span class="badge text-bg-success">DevOps</span>
+                    </div>
+                    <h5 class="card-title">Giảm bill cloud bằng kiến trúc event-driven</h5>
+                    <p class="card-text line-clamp-3">So sánh kiến trúc kéo (pull) vs đẩy (push), hướng sự kiện & serverless để tối ưu chi phí.</p>
+                    <div class="mt-auto d-flex align-items-center justify-content-between">
+                      <small class="text-body-secondary">7 phút đọc • 11/09/2025</small>
+                      <div class="btn-group">
+                        <a href="#article" class="btn btn-sm btn-primary">Đọc</a>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="saveBookmark('Giảm bill cloud')"><i class="bi bi-bookmark"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+              <div class="col-md-6">
+                <article class="card h-100 shadow-soft">
+                  <div class="ratio ratio-16x9">
+                    <img src="https://picsum.photos/640/360?random=13" class="card-img-top object-fit-cover" alt="thumb">
+                  </div>
+                  <div class="card-body d-flex flex-column">
+                    <div class="d-flex gap-2 mb-2">
+                      <span class="badge text-bg-warning">Review</span>
+                    </div>
+                    <h5 class="card-title">So găng ultrabook cho dev: 7840U vs Core Ultra</h5>
+                    <p class="card-text line-clamp-3">Khả năng chạy container, thời lượng pin, và hiệu năng GPU tích hợp trong thực tế.</p>
+                    <div class="mt-auto d-flex align-items-center justify-content-between">
+                      <small class="text-body-secondary">9 phút đọc • 10/09/2025</small>
+                      <div class="btn-group">
+                        <a href="#article" class="btn btn-sm btn-primary">Đọc</a>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="saveBookmark('So găng ultrabook')"><i class="bi bi-bookmark"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+              <div class="col-md-6">
+                <article class="card h-100 shadow-soft">
+                  <div class="ratio ratio-16x9">
+                    <img src="https://picsum.photos/640/360?random=14" class="card-img-top object-fit-cover" alt="thumb">
+                  </div>
+                  <div class="card-body d-flex flex-column">
+                    <div class="d-flex gap-2 mb-2">
+                      <span class="badge text-bg-danger">Security</span>
+                    </div>
+                    <h5 class="card-title">OWASP cho người bận rộn: 5 bài test nhanh</h5>
+                    <p class="card-text line-clamp-3">Checklist ngắn gọn để rà các lỗ hổng thường gặp trước khi release.</p>
+                    <div class="mt-auto d-flex align-items-center justify-content-between">
+                      <small class="text-body-secondary">4 phút đọc • 09/09/2025</small>
+                      <div class="btn-group">
+                        <a href="#article" class="btn btn-sm btn-primary">Đọc</a>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="saveBookmark('OWASP cho người bận rộn')"><i class="bi bi-bookmark"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+            <nav class="mt-4" aria-label="Page navigation">
+              <ul class="pagination pagination-sm justify-content-center">
+                <li class="page-item disabled"><span class="page-link">Trước</span></li>
+                <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Sau</a></li>
+              </ul>
+            </nav>
+          </div>
+
+          <div class="tab-pane fade" id="popular" role="tabpanel" aria-labelledby="popular-tab">
+            <div class="list-group list-group-flush">
+              <a href="#article" class="list-group-item list-group-item-action d-flex gap-3 py-3">
+                <img src="https://picsum.photos/96?random=21" class="rounded flex-shrink-0" width="96" height="96" alt="thumb">
+                <div class="w-100">
+                  <div class="d-flex justify-content-between">
+                    <h6 class="mb-1">Kubernetes giản lược cho startup nhỏ</h6>
+                    <small class="opacity-75 text-nowrap">89k lượt xem</small>
+                  </div>
+                  <p class="mb-0 opacity-75 line-clamp-2">Tối giản cluster và autoscaling để tránh “K8s phình to”.</p>
+                </div>
+              </a>
+              <a href="#article" class="list-group-item list-group-item-action d-flex gap-3 py-3">
+                <img src="https://picsum.photos/96?random=22" class="rounded flex-shrink-0" width="96" height="96" alt="thumb">
+                <div class="w-100">
+                  <div class="d-flex justify-content-between">
+                    <h6 class="mb-1">Tối ưu SQL thực chiến</h6>
+                    <small class="opacity-75 text-nowrap">74k lượt xem</small>
+                  </div>
+                  <p class="mb-0 opacity-75 line-clamp-2">Index thông minh, tránh N+1 và batching hợp lý.</p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="tab-pane fade" id="editors" role="tabpanel" aria-labelledby="editors-tab">
+            <div class="row g-4">
+              <div class="col-md-12">
+                <div class="p-4 rounded bg-body-tertiary shadow-soft d-flex align-items-center">
+                  <i class="bi bi-stars fs-1 me-3 text-warning"></i>
+                  <div>
+                    <h5 class="mb-1">Góc biên tập</h5>
+                    <p class="mb-0">Những bài dài đáng đọc chậm với cà phê đen.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <article class="card h-100 shadow-soft">
+                  <div class="ratio ratio-21x9">
+                    <img src="https://picsum.photos/800/400?random=31" class="card-img-top object-fit-cover" alt="thumb">
+                  </div>
+                  <div class="card-body">
+                    <span class="badge text-bg-dark mb-2">Phân tích</span>
+                    <h5 class="card-title">Làn sóng phần mềm nội địa hoá</h5>
+                    <p class="card-text line-clamp-3">Từ dữ liệu đến trải nghiệm, vì sao sản phẩm thuần bản địa đang lên ngôi?</p>
+                    <a href="#article" class="btn btn-outline-primary btn-sm">Đọc</a>
+                  </div>
+                </article>
+              </div>
+              <div class="col-md-6">
+                <article class="card h-100 shadow-soft">
+                  <div class="ratio ratio-21x9">
+                    <img src="https://picsum.photos/800/400?random=32" class="card-img-top object-fit-cover" alt="thumb">
+                  </div>
+                  <div class="card-body">
+                    <span class="badge text-bg-dark mb-2">Phân tích</span>
+                    <h5 class="card-title">Mặt tối của tối ưu hoá</h5>
+                    <p class="card-text line-clamp-3">Khi micro-optimization đánh đổi maintainability và sự an toàn.</p>
+                    <a href="#article" class="btn btn-outline-primary btn-sm">Đọc</a>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="col-lg-4">
+        <div id="about" class="card shadow-soft mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Về TechNews</h5>
+            <p class="card-text">Blog chia sẻ kiến thức công nghệ, lập trình, sản phẩm mới và câu chuyện hậu trường làm phần mềm.</p>
+            <a href="#contact" class="btn btn-outline-secondary btn-sm"><i class="bi bi-send"></i> Liên hệ</a>
+          </div>
+        </div>
+        <div class="card shadow-soft mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Nhận bản tin</h5>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+              <input type="email" class="form-control" placeholder="Email của bạn">
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#subscribeModal">Đăng ký</button>
+            </div>
+            <small class="text-body-secondary">Không spam. Có thể huỷ bất cứ lúc nào.</small>
+          </div>
+        </div>
+        <div class="card shadow-soft mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Được quan tâm</h5>
+            <div class="vstack gap-3">
+              <a href="#article" class="d-flex gap-3 align-items-start text-decoration-none">
+                <img src="https://picsum.photos/80?random=41" class="rounded" width="80" height="80" alt="thumb">
+                <div>
+                  <h6 class="mb-1">Thiết kế API bền vững</h6>
+                  <div class="small text-body-secondary">6 phút đọc</div>
+                </div>
+              </a>
+              <a href="#article" class="d-flex gap-3 align-items-start text-decoration-none">
+                <img src="https://picsum.photos/80?random=42" class="rounded" width="80" height="80" alt="thumb">
+                <div>
+                  <h6 class="mb-1">Data pipeline giá rẻ</h6>
+                  <div class="small text-body-secondary">8 phút đọc</div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="card shadow-soft mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Tags</h5>
+            <div class="d-flex flex-wrap gap-2">
+              <a class="btn btn-sm btn-outline-secondary" href="#">AI</a>
+              <a class="btn btn-sm btn-outline-secondary" href="#">Python</a>
+              <a class="btn btn-sm btn-outline-secondary" href="#">Kubernetes</a>
+              <a class="btn btn-sm btn-outline-secondary" href="#">SQL</a>
+              <a class="btn btn-sm btn-outline-secondary" href="#">Laptop</a>
+              <a class="btn btn-sm btn-outline-secondary" href="#">Security</a>
+            </div>
+          </div>
+        </div>
+        <div class="card shadow-soft">
+          <div class="card-body">
+            <h5 class="card-title">Lưu trữ</h5>
+            <ul class="list-unstyled mb-0">
+              <li><a class="link-body-emphasis" href="#">Tháng 9, 2025</a></li>
+              <li><a class="link-body-emphasis" href="#">Tháng 8, 2025</a></li>
+              <li><a class="link-body-emphasis" href="#">Tháng 7, 2025</a></li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <section id="article" class="container py-5">
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <article class="">
+          <header class="mb-3">
+            <h1 class="h3">Tự động hoá với tác nhân AI: xây từ con số 0</h1>
+            <div class="d-flex flex-wrap gap-2 align-items-center text-body-secondary small">
+              <span><i class="bi bi-person-circle"></i> Bởi Admin</span>
+              <span>•</span>
+              <time datetime="2025-09-12">12/09/2025</time>
+              <span>•</span>
+              <span>5 phút đọc</span>
+            </div>
+          </header>
+          <figure class="ratio ratio-21x9 mb-3">
+            <img src="https://picsum.photos/1200/520?random=51" alt="cover" class="w-100 h-100 object-fit-cover rounded">
+          </figure>
+          <p>Agents là các quy trình có khả năng tự quyết định hành động dựa trên mục tiêu, công cụ sẵn có và phản hồi môi trường.</p>
+          <p>Trong bài này, ta dựng một agent đơn giản: nhận yêu cầu, gọi API, lưu log và báo cáo kết quả. Mục tiêu là tối giản chi phí mà vẫn hữu ích.</p>
+          <h2 class="h5 mt-4">Kiến trúc tối giản</h2>
+          <ul>
+            <li><strong>Orchestrator</strong>: điều phối từng bước.</li>
+            <li><strong>Tools</strong>: các hành động cụ thể (call API, đọc file).</li>
+            <li><strong>Memory</strong>: lưu ngữ cảnh tối thiểu.</li>
+          </ul>
+          <blockquote class="blockquote ps-3 border-start border-3">Tip: luôn log input/output để dễ kiểm chứng và rollback.</blockquote>
+          <div class="d-flex align-items-center gap-2 my-3">
+            <button class="btn btn-primary" onclick="saveBookmark('Tự động hoá với tác nhân AI')"><i class="bi bi-bookmark"></i> Lưu bài</button>
+            <button class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#shareBox"><i class="bi bi-share"></i> Chia sẻ</button>
+          </div>
+          <div class="collapse" id="shareBox">
+            <div class="input-group mb-3">
+              <span class="input-group-text">URL</span>
+              <input type="text" class="form-control" value="https://example.com/bai-viet/agents" readonly>
+              <button class="btn btn-outline-secondary" onclick="toast('Đã copy link!')">Copy</button>
+            </div>
+          </div>
+        </article>
+
+        <section class="mt-5">
+          <h3 class="h5">Bình luận (3)</h3>
+          <div class="list-group mb-3">
+            <div class="list-group-item">
+              <div class="d-flex justify-content-between">
+                <strong>Thái</strong>
+                <small class="text-body-secondary">2 giờ trước</small>
+              </div>
+              <p class="mb-0">Bài hay, phần kiến trúc rất dễ áp dụng.</p>
+            </div>
+            <div class="list-group-item">
+              <div class="d-flex justify-content-between">
+                <strong>Lan</strong>
+                <small class="text-body-secondary">Hôm qua</small>
+              </div>
+              <p class="mb-0">Có demo repo không bạn?</p>
+            </div>
+            <div class="list-group-item">
+              <div class="d-flex justify-content-between">
+                <strong>Huy</strong>
+                <small class="text-body-secondary">Hôm qua</small>
+              </div>
+              <p class="mb-0">Thêm phần đo chi phí theo request nữa là tuyệt.</p>
+            </div>
+          </div>
+          <form class="vstack gap-2">
+            <textarea class="form-control" rows="3" placeholder="Viết bình luận..."></textarea>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="notifyMe">
+                <label class="form-check-label" for="notifyMe">Báo email khi có phản hồi</label>
+              </div>
+              <button type="button" class="btn btn-primary" onclick="toast('Đã gửi bình luận!')">Gửi</button>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card shadow-soft mb-4">
+          <div class="card-body">
+            <h6 class="card-title">Mục lục</h6>
+            <ol class="mb-0 small">
+              <li><a href="#">Giới thiệu</a></li>
+              <li><a href="#">Kiến trúc tối giản</a></li>
+              <li><a href="#">Kết luận</a></li>
+            </ol>
+          </div>
+        </div>
+        <div class="card shadow-soft">
+          <div class="card-body">
+            <h6 class="card-title">Bài liên quan</h6>
+            <ul class="list-unstyled mb-0">
+              <li class="mb-2"><a class="link-body-emphasis" href="#">Thiết kế prompt như viết test case</a></li>
+              <li class="mb-2"><a class="link-body-emphasis" href="#">Lập trình hướng sự kiện 101</a></li>
+              <li><a class="link-body-emphasis" href="#">Giảm độ trễ inference trên GPU phổ thông</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contact" class="bg-body-tertiary border-top mt-5">
+    <div class="container py-5">
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+          <h5>TechNews</h5>
+          <p class="mb-1">Chia sẻ kiến thức chất lượng cho cộng đồng dev Việt.</p>
+          <small class="text-body-secondary">&copy; 2025 TechNews. All rights reserved.</small>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <h6>Liên hệ</h6>
+          <ul class="list-unstyled">
+            <li><i class="bi bi-envelope"></i> contact@technews.example</li>
+            <li><i class="bi bi-geo"></i> Hà Nội, Việt Nam</li>
+          </ul>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <h6>Mạng xã hội</h6>
+          <div class="d-flex gap-2">
+            <a class="btn btn-outline-secondary btn-sm" href="#"><i class="bi bi-facebook"></i></a>
+            <a class="btn btn-outline-secondary btn-sm" href="#"><i class="bi bi-youtube"></i></a>
+            <a class="btn btn-outline-secondary btn-sm" href="#"><i class="bi bi-github"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button id="backToTop" class="btn btn-primary back-to-top" aria-label="Back to top"><i class="bi bi-arrow-up"></i></button>
+
+  <div class="position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index: 1080">
+    <div id="liveToast" class="toast align-items-center text-bg-dark border-0" role="status" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toastText">Thao tác thành công!</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="subscribeModal" tabindex="-1" aria-labelledby="subscribeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="subscribeModalLabel">Đăng ký bản tin</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+            <input type="email" class="form-control" placeholder="Email của bạn">
+          </div>
+          <div class="form-text">Chúng tôi chỉ gửi nội dung giá trị, không spam.</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-primary" onclick="toast('Đã đăng ký!')" data-bs-dismiss="modal">Đăng ký</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script>
+    function formatNow() {
+      const now = new Date();
+      return new Intl.DateTimeFormat('vi-VN', { dateStyle: 'full', timeStyle: 'short' }).format(now);
+    }
+    document.getElementById('now').textContent = formatNow();
+    setInterval(() => { document.getElementById('now').textContent = formatNow(); }, 60000);
+
+    const root = document.documentElement;
+    const storageKey = 'bs-theme';
+    const applyTheme = (t) => document.documentElement.setAttribute('data-bs-theme', t);
+    const stored = localStorage.getItem(storageKey);
+    if (stored) applyTheme(stored);
+    const toggleTheme = () => {
+      const current = document.documentElement.getAttribute('data-bs-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      applyTheme(next);
+      localStorage.setItem(storageKey, next);
+    };
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    document.getElementById('themeToggleMobile').addEventListener('click', toggleTheme);
+
+    function openSearch() {
+      const off = new bootstrap.Offcanvas('#offcanvasSearch');
+      off.show();
+    }
+
+    const toastEl = document.getElementById('liveToast');
+    const toast = (msg) => { document.getElementById('toastText').textContent = msg; new bootstrap.Toast(toastEl).show(); };
+
+    function saveBookmark(title) {
+      try {
+        const key = 'bookmarks';
+        const now = new Date().toISOString();
+        const data = JSON.parse(localStorage.getItem(key) || '[]');
+        data.push({ title, time: now });
+        localStorage.setItem(key, JSON.stringify(data));
+        toast('Đã lưu bài: ' + title);
+      } catch (e) { toast('Không thể lưu, hãy bật localStorage.'); }
+    }
+
+    const backBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) backBtn.style.display = 'inline-flex';
+      else backBtn.style.display = 'none';
+    });
+    backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+</body>
+</html>
