@@ -3,187 +3,102 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Heart of Stars — Directed Edition ✨</title>
+  <title>Trái tim 3D & Tên bằng sao ✨</title>
   <style>
-    :root { --bg:#05060e; }
-    html, body { height:100%; margin:0; background: var(--bg); overflow:hidden; }
-    body::before{
-      content:""; position:fixed; inset:0; pointer-events:none;
-      background:
-        radial-gradient(1600px 900px at 70% 10%, rgba(40,55,120,.35), transparent 60%),
-        radial-gradient(1200px 700px at 30% 80%, rgba(200,40,80,.18), transparent 60%),
-        radial-gradient(1200px 700px at 50% 50%, rgba(255,255,255,.05), transparent 70%),
-        radial-gradient(closest-side, rgba(0,0,0,.0), rgba(0,0,0,.35));
-      mix-blend-mode: screen;
-    }
+    html, body { height:100%; margin:0; background:#010104; overflow:hidden; }
     #scene{ width:100%; height:100%; display:block; }
-    .sr { position:fixed; inset:auto 0 14px 0; text-align:center; color:#aeb8ff; font:12px/1.2 ui-sans-serif,system-ui; opacity:.7; }
   </style>
 </head>
 <body>
   <canvas id="scene"></canvas>
   <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
   <script>
-    const NAME = "Tudo";
+    const NAME = "VÂN KHÁNH";
 
-    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('scene'), antialias:true, alpha:true });
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('scene'), antialias:true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio,2));
     const scene = new THREE.Scene();
 
-    const camera = new THREE.PerspectiveCamera(58, 1, 0.1, 8000);
-    camera.position.set(0, 20, 780);
+    const camera = new THREE.PerspectiveCamera(55, innerWidth/innerHeight, 0.1, 5000);
+    camera.position.set(0,0,1000);
+    function onResize(){ renderer.setSize(innerWidth,innerHeight); camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); }
+    addEventListener('resize', onResize); onResize();
 
-    function onResize(){
-      const w = innerWidth, h = innerHeight; renderer.setSize(w,h,false); camera.aspect = w/h; camera.updateProjectionMatrix();
-    } addEventListener('resize', onResize); onResize();
-
-    function circleTexture(size=64){
-      const c = document.createElement('canvas'); c.width = c.height = size; const x = c.getContext('2d');
-      const g = x.createRadialGradient(size/2,size/2,1, size/2,size/2,size/2);
-      g.addColorStop(0,'rgba(255,255,255,1)');
-      g.addColorStop(.25,'rgba(255,255,255,.95)');
-      g.addColorStop(.55,'rgba(255,255,255,.35)');
-      g.addColorStop(1,'rgba(255,255,255,0)');
-      x.fillStyle=g; x.fillRect(0,0,size,size); return new THREE.CanvasTexture(c);
+    // star texture
+    function makeTex(color){
+      const c=document.createElement('canvas'); c.width=c.height=64; const ctx=c.getContext('2d');
+      const g=ctx.createRadialGradient(32,32,0,32,32,32);
+      g.addColorStop(0,color); g.addColorStop(0.3,color); g.addColorStop(1,'transparent');
+      ctx.fillStyle=g; ctx.fillRect(0,0,64,64);
+      return new THREE.CanvasTexture(c);
     }
-    const tex = circleTexture();
+    const texWhite=makeTex('#ffffff');
+    const texRed=makeTex('#ff1a1a');
 
-    (function bgStars(){
-      const count = 2400, radius = 2600;
-      const pos = new Float32Array(count*3);
+    // background stars
+    (function(){
+      const count=6000, radius=3500; const pos=new Float32Array(count*3);
       for(let i=0;i<count;i++){
-        const r = radius * Math.cbrt(Math.random());
-        const th = Math.random()*Math.PI*2; const ph = Math.acos(2*Math.random()-1);
-        pos[i*3+0] = r*Math.sin(ph)*Math.cos(th);
-        pos[i*3+1] = r*Math.sin(ph)*Math.sin(th);
-        pos[i*3+2] = r*Math.cos(ph);
+        const r=radius*Math.cbrt(Math.random());
+        const th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1);
+        pos[i*3]=r*Math.sin(ph)*Math.cos(th);
+        pos[i*3+1]=r*Math.sin(ph)*Math.sin(th);
+        pos[i*3+2]=r*Math.cos(ph);
       }
-      const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos,3));
-      const m = new THREE.PointsMaterial({ map: tex, size: 1.6, color: 0xffffff, transparent:true, depthWrite:false, opacity:.85 });
-      const mesh = new THREE.Points(g,m); mesh.name = 'bgStars'; scene.add(mesh);
+      const g=new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos,3));
+      const m=new THREE.PointsMaterial({ map:texWhite, size:1.2, transparent:true, depthWrite:false, opacity:0.9 });
+      scene.add(new THREE.Points(g,m));
     })();
 
-    function insideHeart(x, y){
-      const xx = x*x, yy = y*y; return Math.pow(xx + yy - 1, 3) - xx * yy * y <= 0;
-    }
-    function sampleHeart(n, scale=160){
-      const pts = new Float32Array(n*3);
-      let i=0; while(i<n){
-        const x = (Math.random()*2 - 1) * 1.4;
-        const y = (Math.random()*2 - 1) * 1.3;
-        if(insideHeart(x,y)){
-          const j = i*3;
-          pts[j  ] = x*scale;
-          pts[j+1] = y*scale + 120;
-          pts[j+2] = (Math.random()-.5) * 36;
-          i++;
-        }
+    // heart 3D explicit parametric sampling
+    // sử dụng công thức tham số để tạo bề mặt trái tim 3D
+    function heart3DPoints(n){
+      const pts=new Float32Array(n*3);
+      for(let i=0;i<n;i++){
+        const u=Math.random()*Math.PI*2;
+        const v=Math.random()*Math.PI;
+        const r=1 - Math.sin(v);
+        const x=r*Math.cos(u);
+        const y=r*Math.sin(u);
+        const z=Math.cos(v);
+        pts[i*3]=x*200;
+        pts[i*3+1]=y*200+150;
+        pts[i*3+2]=z*200;
       }
       return pts;
     }
 
-    const HEART_N = 14000;
-    const heartPos = sampleHeart(HEART_N);
+    const heartPos=heart3DPoints(25000);
+    const heartGeom=new THREE.BufferGeometry(); heartGeom.setAttribute('position', new THREE.BufferAttribute(heartPos,3));
+    const heartMat=new THREE.PointsMaterial({ map:texRed, size:2.2, transparent:true, blending:THREE.AdditiveBlending, depthWrite:false, opacity:1 });
+    const heart=new THREE.Points(heartGeom,heartMat);
+    scene.add(heart);
 
-    function makePointCloud(positions, {size, color, opacity=1}){
-      const g = new THREE.BufferGeometry();
-      g.setAttribute('position', new THREE.BufferAttribute(positions.slice(0),3));
-      const m = new THREE.PointsMaterial({ map: tex, size, color, transparent:true, depthWrite:false, blending: THREE.AdditiveBlending, opacity });
-      return new THREE.Points(g,m);
-    }
-
-    const heartCore = makePointCloud(heartPos, { size: 2.2, color: 0xff1e2f, opacity: 0.95 });
-    const heartGlow = makePointCloud(heartPos, { size: 5.5, color: 0xff6b8a, opacity: 0.35 });
-
-    function rasterText(text){
-      const W=1600,H=360; const c=document.createElement('canvas'); c.width=W; c.height=H; const ctx=c.getContext('2d');
-      const fs = Math.max(120, 280 - Math.max(0, text.length-8)*14);
-      ctx.fillStyle = '#fff'; ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.font = `900 ${fs}px \\Segoe UI, Roboto, Helvetica, Arial, sans-serif`;
-      ctx.shadowColor='rgba(255,255,255,.9)'; ctx.shadowBlur=22; ctx.fillText(text.toUpperCase(), W/2, H/2);
-      const img=ctx.getImageData(0,0,W,H).data; const pts=[]; const step=3;
-      for(let y=0;y<H;y+=step){ for(let x=0;x<W;x+=step){ if(img[(y*W+x)*4+3]>28) pts.push([x,y]); } }
-      return {pts, W, H};
-    }
-
-    const {pts: namePts, W: TW, H: TH} = rasterText(NAME);
-    const NAME_N = Math.min(12000, namePts.length);
-    const namePos = new Float32Array(NAME_N*3);
-    for(let i=0;i<NAME_N;i++){
-      const p = namePts[Math.floor(Math.random()*namePts.length)];
-      namePos[i*3+0] = (p[0]-TW/2)*0.62;
-      namePos[i*3+1] = (TH/2 - p[1])*0.62 - 200;
-      namePos[i*3+2] = (Math.random()-.5)*24;
-    }
-
-    const nameCore = makePointCloud(namePos, { size: 2.1, color: 0xffffff, opacity: 0.95 });
-    const nameGlow = makePointCloud(namePos, { size: 5.0, color: 0xccddff, opacity: 0.35 });
-
-    const root = new THREE.Group();
-    root.add(heartGlow, heartCore, nameGlow, nameCore);
-    scene.add(root);
-
-    function makeSpawnSphere(positions, radius){
-      const arr = new Float32Array(positions.length);
-      for(let i=0;i<positions.length/3;i++){
-        const th = Math.random()*Math.PI*2, ph = Math.acos(2*Math.random()-1), r = radius*(0.85+Math.random()*0.3);
-        arr[i*3+0] = r*Math.sin(ph)*Math.cos(th);
-        arr[i*3+1] = r*Math.sin(ph)*Math.sin(th);
-        arr[i*3+2] = r*Math.cos(ph);
-      }
+    // text points
+    function textPoints(text){
+      const W=1600,H=400; const c=document.createElement('canvas'); c.width=W; c.height=H; const ctx=c.getContext('2d');
+      ctx.fillStyle='#fff'; ctx.font='900 240px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(text,W/2,H/2);
+      const img=ctx.getImageData(0,0,W,H).data; const pts=[];
+      for(let y=0;y<H;y+=3){ for(let x=0;x<W;x+=3){ if(img[(y*W+x)*4+3]>128) pts.push([(x-W/2)*0.7,(H/2-y)*0.7-250]); } }
+      const arr=new Float32Array(pts.length*3);
+      for(let i=0;i<pts.length;i++){ arr[i*3]=pts[i][0]; arr[i*3+1]=pts[i][1]; arr[i*3+2]=(Math.random()-.5)*20; }
       return arr;
     }
+    const namePos=textPoints(NAME);
+    const nameGeom=new THREE.BufferGeometry(); nameGeom.setAttribute('position', new THREE.BufferAttribute(namePos,3));
+    const nameMat=new THREE.PointsMaterial({ map:texWhite, size:2.0, transparent:true, blending:THREE.AdditiveBlending, depthWrite:false });
+    const nameMesh=new THREE.Points(nameGeom,nameMat);
+    scene.add(nameMesh);
 
-    const spawnHeart = makeSpawnSphere(heartPos, 1400);
-    const spawnName  = makeSpawnSphere(namePos, 1400);
-
-    function attachLerp(targetPoints, spawnPoints, pointsObj, speed=0.08){
-      const buf = pointsObj.geometry.attributes.position.array;
-      buf.set(spawnPoints); pointsObj.geometry.attributes.position.needsUpdate = true;
-      return function step(){
-        for(let i=0;i<buf.length;i+=3){
-          buf[i  ] += (targetPoints[i  ] - buf[i  ]) * speed;
-          buf[i+1] += (targetPoints[i+1] - buf[i+1]) * speed;
-          buf[i+2] += (targetPoints[i+2] - buf[i+2]) * speed;
-        }
-        pointsObj.geometry.attributes.position.needsUpdate = true;
-      }
-    }
-
-    const lerpHeartCore = attachLerp(heartPos, spawnHeart, heartCore, 0.09);
-    const lerpHeartGlow = attachLerp(heartPos, spawnHeart, heartGlow, 0.09);
-    const lerpNameCore  = attachLerp(namePos,  spawnName,  nameCore,  0.09);
-    const lerpNameGlow  = attachLerp(namePos,  spawnName,  nameGlow,  0.09);
-
-    let mx = 0, my = 0;
-    addEventListener('pointermove', (e)=>{
-      const nx = (e.clientX / innerWidth) * 2 - 1;
-      const ny = (e.clientY / innerHeight) * 2 - 1; mx = nx; my = ny;
-    });
-
-    const t0 = performance.now();
+    // animation
+    const t0=performance.now();
     function animate(){
       requestAnimationFrame(animate);
-      const t = (performance.now() - t0) / 1000;
-
-      if(t < 6){ lerpHeartCore(); lerpHeartGlow(); if(t>0.5){ lerpNameCore(); lerpNameGlow(); } }
-
-      const beat = 1 + 0.05*Math.sin(t*2.6) + 0.02*Math.sin(t*5.1);
-      heartCore.scale.setScalar(beat); heartGlow.scale.setScalar(beat*1.015);
-      root.rotation.y = Math.sin(t*0.25)*0.18;
-      root.rotation.x = Math.cos(t*0.21)*0.06;
-
-      camera.position.x = 780 * Math.sin((t*0.05) + mx*0.3);
-      camera.position.z = 780 * Math.cos((t*0.05) + mx*0.3);
-      camera.position.y = 20 + my * 20;
-      camera.lookAt(0,40,0);
-
-      const tw = 0.5 + 0.5*Math.sin(t*2.0);
-      heartCore.material.size = 2.0 + tw*0.5;
-      nameCore.material.size  = 2.0 + (1-tw)*0.4;
-
-      renderer.render(scene, camera);
+      const t=(performance.now()-t0)/1000;
+      const beat=1+0.07*Math.sin(t*3);
+      heart.scale.setScalar(beat);
+      renderer.render(scene,camera);
     }
     animate();
   </script>
