@@ -3,290 +3,189 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>3D Trái tim & Tên bằng sao ✨</title>
+  <title>Heart of Stars — Directed Edition ✨</title>
   <style>
-    html, body { height: 100%; margin: 0; background: radial-gradient(1200px 600px at 70% 20%, #0b1020, #05070f 60%, #02030a); overflow: hidden; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
-    #overlay { position: fixed; top: 12px; left: 12px; right: 12px; display: flex; gap: 8px; align-items: center; z-index: 10; pointer-events: none; }
-    #panel { pointer-events: all; background: rgba(7,9,20,.6); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.08); border-radius: 14px; padding: 10px 12px; display: flex; align-items: center; gap: 8px; box-shadow: 0 6px 24px rgba(0,0,0,.35); }
-    #nameInput { appearance: none; outline: none; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); color: #e6ecff; padding: 8px 10px; border-radius: 10px; min-width: 220px; font-weight: 600; letter-spacing: .3px; }
-    #nameInput::placeholder { color: #aab2d6; }
-    .btn { pointer-events: all; border: 1px solid rgba(255,255,255,.12); background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)); color: #e6ecff; padding: 8px 12px; border-radius: 10px; font-weight: 700; letter-spacing: .3px; cursor: pointer; transition: transform .12s ease, filter .12s ease; }
-    .btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
-    .sep { display: inline-block; width: 1px; height: 20px; background: rgba(255,255,255,.1); margin: 0 2px; }
-    .hint { color: #aab2d6; font-size: 12px; padding: 4px 8px; pointer-events: none; }
-    #footer { position: fixed; bottom: 10px; left: 0; right: 0; text-align: center; color: #7f8ac6; font-size: 12px; opacity: .8; user-select: none; }
-    a { color: #cfe1ff; text-decoration: none; border-bottom: 1px dotted rgba(207,225,255,.5); }
+    :root { --bg:#05060e; }
+    html, body { height:100%; margin:0; background: var(--bg); overflow:hidden; }
+    body::before{
+      content:""; position:fixed; inset:0; pointer-events:none;
+      background:
+        radial-gradient(1600px 900px at 70% 10%, rgba(40,55,120,.35), transparent 60%),
+        radial-gradient(1200px 700px at 30% 80%, rgba(200,40,80,.18), transparent 60%),
+        radial-gradient(1200px 700px at 50% 50%, rgba(255,255,255,.05), transparent 70%),
+        radial-gradient(closest-side, rgba(0,0,0,.0), rgba(0,0,0,.35));
+      mix-blend-mode: screen;
+    }
+    #scene{ width:100%; height:100%; display:block; }
+    .sr { position:fixed; inset:auto 0 14px 0; text-align:center; color:#aeb8ff; font:12px/1.2 ui-sans-serif,system-ui; opacity:.7; }
   </style>
 </head>
 <body>
-  <div id="overlay">
-    <div id="panel">
-      <input id="nameInput" type="text" maxlength="24" placeholder="Nhập tên (VD: THINH)" />
-      <button class="btn" id="applyBtn">Hiện tên ✨</button>
-      <span class="sep"></span>
-      <button class="btn" id="heartBtn">Trái tim ❤️</button>
-      <button class="btn" id="orbitBtn">Quay tự động</button>
-      <span class="hint">Kéo chuột để xoay • Cuộn để zoom • Double‑click: toàn màn hình</span>
-    </div>
-  </div>
-  <div id="footer">Made with Three.js • Particles morphing • Twinkle shader-lite</div>
   <canvas id="scene"></canvas>
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script>
+    const NAME = "Tudo";
 
-  <script type="module">
-    import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
-    import { OrbitControls } from "https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js";
-
-    // ====== Basic setup ======
-    const canvas = document.getElementById('scene');
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('scene'), antialias:true, alpha:true });
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
     const scene = new THREE.Scene();
 
-    const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 2000);
-    camera.position.set(0, 0, 155);
+    const camera = new THREE.PerspectiveCamera(58, 1, 0.1, 8000);
+    camera.position.set(0, 20, 780);
 
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.06;
-
-    // Resize handler
     function onResize(){
-      const w = window.innerWidth, h = window.innerHeight;
-      renderer.setSize(w, h, false);
-      camera.aspect = w/h; camera.updateProjectionMatrix();
-    }
-    window.addEventListener('resize', onResize); onResize();
+      const w = innerWidth, h = innerHeight; renderer.setSize(w,h,false); camera.aspect = w/h; camera.updateProjectionMatrix();
+    } addEventListener('resize', onResize); onResize();
 
-    // ====== Star material (spark) ======
-    function makeSparkTexture(size=64){
-      const c = document.createElement('canvas'); c.width = c.height = size;
-      const ctx = c.getContext('2d');
-      const g = ctx.createRadialGradient(size/2,size/2,1, size/2,size/2,size/2);
-      g.addColorStop(0, 'rgba(255,255,255,1)');
-      g.addColorStop(.2,'rgba(255,250,220,.95)');
-      g.addColorStop(.5,'rgba(200,220,255,.55)');
+    function circleTexture(size=64){
+      const c = document.createElement('canvas'); c.width = c.height = size; const x = c.getContext('2d');
+      const g = x.createRadialGradient(size/2,size/2,1, size/2,size/2,size/2);
+      g.addColorStop(0,'rgba(255,255,255,1)');
+      g.addColorStop(.25,'rgba(255,255,255,.95)');
+      g.addColorStop(.55,'rgba(255,255,255,.35)');
       g.addColorStop(1,'rgba(255,255,255,0)');
-      ctx.fillStyle = g; ctx.fillRect(0,0,size,size);
-      return new THREE.CanvasTexture(c);
+      x.fillStyle=g; x.fillRect(0,0,size,size); return new THREE.CanvasTexture(c);
     }
-    const sparkTex = makeSparkTexture();
+    const tex = circleTexture();
 
-    // ====== Background star field ======
-    function makeStarField(count=2000, radius=900){
-      const g = new THREE.BufferGeometry();
+    (function bgStars(){
+      const count = 2400, radius = 2600;
       const pos = new Float32Array(count*3);
-      const col = new Float32Array(count*3);
       for(let i=0;i<count;i++){
         const r = radius * Math.cbrt(Math.random());
-        const theta = Math.random()*Math.PI*2;
-        const phi = Math.acos(2*Math.random()-1);
-        const x = r * Math.sin(phi) * Math.cos(theta);
-        const y = r * Math.sin(phi) * Math.sin(theta);
-        const z = r * Math.cos(phi);
-        pos.set([x,y,z], i*3);
-        // cold-blue-ish stars with variance
-        const hue = 0.6 + (Math.random()-0.5)*0.05;
-        const c = new THREE.Color().setHSL(hue, 0.6, 0.75 + Math.random()*0.15);
-        col.set([c.r, c.g, c.b], i*3);
+        const th = Math.random()*Math.PI*2; const ph = Math.acos(2*Math.random()-1);
+        pos[i*3+0] = r*Math.sin(ph)*Math.cos(th);
+        pos[i*3+1] = r*Math.sin(ph)*Math.sin(th);
+        pos[i*3+2] = r*Math.cos(ph);
       }
-      g.setAttribute('position', new THREE.BufferAttribute(pos,3));
-      g.setAttribute('color', new THREE.BufferAttribute(col,3));
-      const m = new THREE.PointsMaterial({ size: 2, vertexColors: true, transparent: true, depthWrite: false, map: sparkTex, alphaTest: 0.02 });
-      const mesh = new THREE.Points(g,m);
-      mesh.matrixAutoUpdate = false; // static
-      return mesh;
+      const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos,3));
+      const m = new THREE.PointsMaterial({ map: tex, size: 1.6, color: 0xffffff, transparent:true, depthWrite:false, opacity:.85 });
+      const mesh = new THREE.Points(g,m); mesh.name = 'bgStars'; scene.add(mesh);
+    })();
+
+    function insideHeart(x, y){
+      const xx = x*x, yy = y*y; return Math.pow(xx + yy - 1, 3) - xx * yy * y <= 0;
     }
-    scene.add(makeStarField());
-
-    // ====== Heart & Name particle system ======
-    const PARTICLES = 8000;
-    const geom = new THREE.BufferGeometry();
-    const positions = new Float32Array(PARTICLES*3);
-    const target = new Float32Array(PARTICLES*3); // morph target buffer
-    const baseColor = new Float32Array(PARTICLES*3);
-    const sizeAttr = new Float32Array(PARTICLES);
-    const phaseAttr = new Float32Array(PARTICLES);
-
-    for(let i=0;i<PARTICLES;i++){
-      positions[i*3+0] = (Math.random()-0.5)*2;
-      positions[i*3+1] = (Math.random()-0.5)*2;
-      positions[i*3+2] = (Math.random()-0.5)*2;
-      baseColor.set([1, .92, .95], i*3);
-      sizeAttr[i] = 2.4 + Math.random()*2.2;
-      phaseAttr[i] = Math.random()*Math.PI*2;
-    }
-
-    geom.setAttribute('position', new THREE.BufferAttribute(positions,3));
-    geom.setAttribute('color', new THREE.BufferAttribute(baseColor,3));
-
-    const mat = new THREE.PointsMaterial({ size: 2.6, map: sparkTex, transparent: true, depthWrite: false, vertexColors: true, opacity: 0.95, alphaTest: 0.02, sizeAttenuation: true });
-    const points = new THREE.Points(geom, mat);
-    scene.add(points);
-
-    // ====== Utility: morphing ======
-    let morphSpeed = 0.06; // lerp factor per frame
-    function setTargetBuffer(arr){
-      target.set(arr);
-    }
-
-    function updateMorph(){
-      const pos = geom.attributes.position.array;
-      for(let i=0;i<PARTICLES;i++){
-        const i3 = i*3;
-        pos[i3+0] += (target[i3+0] - pos[i3+0]) * morphSpeed;
-        pos[i3+1] += (target[i3+1] - pos[i3+1]) * morphSpeed;
-        pos[i3+2] += (target[i3+2] - pos[i3+2]) * morphSpeed;
-      }
-      geom.attributes.position.needsUpdate = true;
-    }
-
-    // ====== Generate HEART positions ======
-    function heart2D(t){
-      // Classic parametric heart curve
-      const x = 16*Math.pow(Math.sin(t),3);
-      const y = 13*Math.cos(t) - 5*Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t);
-      return new THREE.Vector2(x,y);
-    }
-
-    function makeHeartPositions(){
-      const arr = new Float32Array(PARTICLES*3);
-      const curvePts = 1200;
-      const border = [];
-      for(let i=0;i<curvePts;i++){
-        const t = (i/curvePts)*Math.PI*2;
-        const p = heart2D(t);
-        border.push(p);
-      }
-      // Normalize & scale
-      // Heart size tuning: scale to ~ (width ~ 120)
-      const scale = 3.2; // visual scale factor
-      for(let i=0;i<PARTICLES;i++){
-        const b = border[Math.floor(Math.random()*border.length)];
-        // Interpolate towards center to fill interior
-        const k = Math.pow(Math.random(), 1.5); // bias to border
-        const x = b.x * k;
-        const y = b.y * k;
-        const z = (Math.random()-0.5) * 8; // shallow thickness
-        arr[i*3+0] = x*scale;
-        arr[i*3+1] = y*scale + 4; // slight lift
-        arr[i*3+2] = z;
-      }
-      return arr;
-    }
-
-    const heartPositions = makeHeartPositions();
-    setTargetBuffer(heartPositions);
-
-    // ====== Generate NAME positions from canvas text ======
-    const textCanvas = document.createElement('canvas');
-    const tctx = textCanvas.getContext('2d');
-
-    function makeNamePositions(text){
-      const arr = new Float32Array(PARTICLES*3);
-      const W = 1024, H = 256; textCanvas.width = W; textCanvas.height = H;
-      tctx.clearRect(0,0,W,H);
-      // Text style
-      const fontSize = 180; // adaptive later
-      tctx.fillStyle = '#fff';
-      tctx.textAlign = 'center';
-      tctx.textBaseline = 'middle';
-      tctx.font = `bold ${fontSize}px \\-apple-system, Segoe UI, Roboto, Helvetica, Arial`;
-      tctx.shadowColor = 'rgba(255,255,255,.6)';
-      tctx.shadowBlur = 8;
-      tctx.fillText(text.toUpperCase(), W/2, H/2 + 10);
-
-      const img = tctx.getImageData(0,0,W,H).data;
-      const pts = [];
-      const step = 3; // sampling step
-      for(let y=0;y<H;y+=step){
-        for(let x=0;x<W;x+=step){
-          const idx = (y*W + x)*4 + 3; // alpha channel
-          if(img[idx] > 32){
-            pts.push([x, y]);
-          }
+    function sampleHeart(n, scale=160){
+      const pts = new Float32Array(n*3);
+      let i=0; while(i<n){
+        const x = (Math.random()*2 - 1) * 1.4;
+        const y = (Math.random()*2 - 1) * 1.3;
+        if(insideHeart(x,y)){
+          const j = i*3;
+          pts[j  ] = x*scale;
+          pts[j+1] = y*scale + 120;
+          pts[j+2] = (Math.random()-.5) * 36;
+          i++;
         }
       }
-      // Center & scale to world units
-      const worldScale = 0.25; // tune spread
-      // Shuffle for random distribution mapping
-      for(let i=pts.length-1;i>0;i--){
-        const j = Math.floor(Math.random()*(i+1));
-        [pts[i], pts[j]] = [pts[j], pts[i]];
-      }
-      const count = Math.min(PARTICLES, pts.length);
-      for(let i=0;i<PARTICLES;i++){
-        const p = pts[i % count];
-        const xx = (p ? (p[0] - W/2) : (Math.random()-0.5)*W/2) * worldScale;
-        const yy = (p ? (H/2 - p[1]) : (Math.random()-0.5)*H/2) * worldScale;
-        const zz = (Math.random()-0.5) * 6; // slight thickness
-        arr[i*3+0] = xx;
-        arr[i*3+1] = yy;
-        arr[i*3+2] = zz;
+      return pts;
+    }
+
+    const HEART_N = 14000;
+    const heartPos = sampleHeart(HEART_N);
+
+    function makePointCloud(positions, {size, color, opacity=1}){
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.BufferAttribute(positions.slice(0),3));
+      const m = new THREE.PointsMaterial({ map: tex, size, color, transparent:true, depthWrite:false, blending: THREE.AdditiveBlending, opacity });
+      return new THREE.Points(g,m);
+    }
+
+    const heartCore = makePointCloud(heartPos, { size: 2.2, color: 0xff1e2f, opacity: 0.95 });
+    const heartGlow = makePointCloud(heartPos, { size: 5.5, color: 0xff6b8a, opacity: 0.35 });
+
+    function rasterText(text){
+      const W=1600,H=360; const c=document.createElement('canvas'); c.width=W; c.height=H; const ctx=c.getContext('2d');
+      const fs = Math.max(120, 280 - Math.max(0, text.length-8)*14);
+      ctx.fillStyle = '#fff'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.font = `900 ${fs}px \\Segoe UI, Roboto, Helvetica, Arial, sans-serif`;
+      ctx.shadowColor='rgba(255,255,255,.9)'; ctx.shadowBlur=22; ctx.fillText(text.toUpperCase(), W/2, H/2);
+      const img=ctx.getImageData(0,0,W,H).data; const pts=[]; const step=3;
+      for(let y=0;y<H;y+=step){ for(let x=0;x<W;x+=step){ if(img[(y*W+x)*4+3]>28) pts.push([x,y]); } }
+      return {pts, W, H};
+    }
+
+    const {pts: namePts, W: TW, H: TH} = rasterText(NAME);
+    const NAME_N = Math.min(12000, namePts.length);
+    const namePos = new Float32Array(NAME_N*3);
+    for(let i=0;i<NAME_N;i++){
+      const p = namePts[Math.floor(Math.random()*namePts.length)];
+      namePos[i*3+0] = (p[0]-TW/2)*0.62;
+      namePos[i*3+1] = (TH/2 - p[1])*0.62 - 200;
+      namePos[i*3+2] = (Math.random()-.5)*24;
+    }
+
+    const nameCore = makePointCloud(namePos, { size: 2.1, color: 0xffffff, opacity: 0.95 });
+    const nameGlow = makePointCloud(namePos, { size: 5.0, color: 0xccddff, opacity: 0.35 });
+
+    const root = new THREE.Group();
+    root.add(heartGlow, heartCore, nameGlow, nameCore);
+    scene.add(root);
+
+    function makeSpawnSphere(positions, radius){
+      const arr = new Float32Array(positions.length);
+      for(let i=0;i<positions.length/3;i++){
+        const th = Math.random()*Math.PI*2, ph = Math.acos(2*Math.random()-1), r = radius*(0.85+Math.random()*0.3);
+        arr[i*3+0] = r*Math.sin(ph)*Math.cos(th);
+        arr[i*3+1] = r*Math.sin(ph)*Math.sin(th);
+        arr[i*3+2] = r*Math.cos(ph);
       }
       return arr;
     }
 
-    // ====== Controls UI ======
-    const nameInput = document.getElementById('nameInput');
-    const applyBtn = document.getElementById('applyBtn');
-    const heartBtn = document.getElementById('heartBtn');
-    const orbitBtn = document.getElementById('orbitBtn');
+    const spawnHeart = makeSpawnSphere(heartPos, 1400);
+    const spawnName  = makeSpawnSphere(namePos, 1400);
 
-    // Initialize from URL (?name=...)
-    const url = new URL(location.href);
-    const initialName = url.searchParams.get('name') || 'THINH';
-    nameInput.value = initialName;
-
-    applyBtn.addEventListener('click', ()=>{
-      const txt = (nameInput.value || '').trim();
-      if(!txt){ return; }
-      const namePos = makeNamePositions(txt);
-      setTargetBuffer(namePos);
-      morphSpeed = 0.08;
-    });
-    heartBtn.addEventListener('click', ()=>{ setTargetBuffer(heartPositions); morphSpeed = 0.06; });
-
-    let autoOrbit = false; let orbitAngle = 0;
-    orbitBtn.addEventListener('click', ()=>{ autoOrbit = !autoOrbit; orbitBtn.textContent = autoOrbit ? 'Dừng quay' : 'Quay tự động'; });
-
-    // Double click to fullscreen
-    window.addEventListener('dblclick', ()=>{
-      if(!document.fullscreenElement){ document.documentElement.requestFullscreen().catch(()=>{}); }
-      else { document.exitFullscreen().catch(()=>{}); }
-    });
-
-    // ====== Animation (twinkle + morph) ======
-    const clock = new THREE.Clock();
-    function animate(){
-      const t = clock.getElapsedTime();
-      requestAnimationFrame(animate);
-
-      // Twinkle by pulsating size/opacity
-      const tw = 0.5 + 0.5*Math.sin(t*2.0);
-      mat.size = 2.4 + tw*1.8;
-      mat.opacity = 0.88 + 0.12*Math.sin(t*1.6 + 0.5);
-
-      updateMorph();
-
-      if(autoOrbit){
-        orbitAngle += 0.0045;
-        camera.position.x = 155 * Math.sin(orbitAngle);
-        camera.position.z = 155 * Math.cos(orbitAngle);
-        camera.lookAt(0, 8, 0);
+    function attachLerp(targetPoints, spawnPoints, pointsObj, speed=0.08){
+      const buf = pointsObj.geometry.attributes.position.array;
+      buf.set(spawnPoints); pointsObj.geometry.attributes.position.needsUpdate = true;
+      return function step(){
+        for(let i=0;i<buf.length;i+=3){
+          buf[i  ] += (targetPoints[i  ] - buf[i  ]) * speed;
+          buf[i+1] += (targetPoints[i+1] - buf[i+1]) * speed;
+          buf[i+2] += (targetPoints[i+2] - buf[i+2]) * speed;
+        }
+        pointsObj.geometry.attributes.position.needsUpdate = true;
       }
+    }
 
-      controls.update();
+    const lerpHeartCore = attachLerp(heartPos, spawnHeart, heartCore, 0.09);
+    const lerpHeartGlow = attachLerp(heartPos, spawnHeart, heartGlow, 0.09);
+    const lerpNameCore  = attachLerp(namePos,  spawnName,  nameCore,  0.09);
+    const lerpNameGlow  = attachLerp(namePos,  spawnName,  nameGlow,  0.09);
+
+    let mx = 0, my = 0;
+    addEventListener('pointermove', (e)=>{
+      const nx = (e.clientX / innerWidth) * 2 - 1;
+      const ny = (e.clientY / innerHeight) * 2 - 1; mx = nx; my = ny;
+    });
+
+    const t0 = performance.now();
+    function animate(){
+      requestAnimationFrame(animate);
+      const t = (performance.now() - t0) / 1000;
+
+      if(t < 6){ lerpHeartCore(); lerpHeartGlow(); if(t>0.5){ lerpNameCore(); lerpNameGlow(); } }
+
+      const beat = 1 + 0.05*Math.sin(t*2.6) + 0.02*Math.sin(t*5.1);
+      heartCore.scale.setScalar(beat); heartGlow.scale.setScalar(beat*1.015);
+      root.rotation.y = Math.sin(t*0.25)*0.18;
+      root.rotation.x = Math.cos(t*0.21)*0.06;
+
+      camera.position.x = 780 * Math.sin((t*0.05) + mx*0.3);
+      camera.position.z = 780 * Math.cos((t*0.05) + mx*0.3);
+      camera.position.y = 20 + my * 20;
+      camera.lookAt(0,40,0);
+
+      const tw = 0.5 + 0.5*Math.sin(t*2.0);
+      heartCore.material.size = 2.0 + tw*0.5;
+      nameCore.material.size  = 2.0 + (1-tw)*0.4;
+
       renderer.render(scene, camera);
     }
     animate();
-
-    // Trigger initial name morph after a moment for a nice entrance
-    setTimeout(()=>{
-      const namePos = makeNamePositions(initialName);
-      setTargetBuffer(namePos);
-      morphSpeed = 0.08;
-    }, 900);
   </script>
 </body>
 </html>
