@@ -3,104 +3,358 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Trái tim 3D & Tên bằng sao ✨</title>
+  <title>Thịnh • Web Dev 3D – Portfolio + Showroom + Shader Lab</title>
   <style>
-    html, body { height:100%; margin:0; background:#010104; overflow:hidden; }
-    #scene{ width:100%; height:100%; display:block; }
+    :root{
+      --bg:#0b0f17; --panel:#0f1625; --panel2:#0d1320; --fg:#e6f1ff; --muted:#9fb0c8; --acc:#66d9ef; --acc2:#a6e22e; --ring:#1b263b;
+    }
+    [data-theme="light"]{ --bg:#f7fbff; --panel:#ffffff; --panel2:#f2f7ff; --fg:#0a1220; --muted:#4a5a77; --acc:#0077ff; --acc2:#14b86a; --ring:#d9e6ff; }
+    *{box-sizing:border-box}
+    html,body{height:100%; margin:0; background:var(--bg); color:var(--fg); font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+    a{color:inherit; text-decoration:none}
+    .wrapper{max-width:1200px; margin:0 auto; padding:0 20px}
+
+    /* Header */
+    header{position:sticky; top:0; z-index:40; background:rgba(11,15,23,.55); backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,.06)}
+    [data-theme="light"] header{background:rgba(255,255,255,.7); border-bottom-color:#e9eef7}
+    nav{display:flex; align-items:center; gap:16px; padding:14px 0}
+    .brand{font-weight:800; letter-spacing:.2px}
+    .spacer{flex:1}
+    .nav a, .nav button{padding:8px 10px; border-radius:10px; color:var(--muted); border:0; background:transparent; cursor:pointer}
+    .nav a:hover, .nav button:hover{background:rgba(255,255,255,.08); color:var(--fg)}
+    [data-theme="light"] .nav a:hover,[data-theme="light"] .nav button:hover{background:#eef5ff}
+
+    /* Hero */
+    .hero{position:relative; min-height:72vh; display:grid; grid-template-columns:1.15fr 1fr; gap:28px; align-items:center}
+    .hero h1{font-size:clamp(30px,6vw,60px); line-height:1.05; margin:0 0 12px}
+    .hero p{color:var(--muted); font-size:clamp(14px,2.1vw,18px); margin:0 0 18px}
+    .cta{display:flex; gap:12px; flex-wrap:wrap}
+    .btn{appearance:none; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06); color:var(--fg); padding:10px 14px; border-radius:12px; cursor:pointer}
+    .btn.acc{border-color:rgba(102,217,239,.6)}
+    [data-theme="light"] .btn{background:#f8fbff; border-color:#dfe9ff}
+
+    .panel3d{position:relative; height:min(68vh,560px); border-radius:18px; overflow:hidden; background:linear-gradient(180deg,#0c1322,#0a0f1a); border:1px solid rgba(255,255,255,.1)}
+    [data-theme="light"] .panel3d{background:linear-gradient(180deg,#eff6ff,#ffffff); border-color:#e8eef8}
+    .chip{position:absolute; left:14px; top:14px; font-size:12px; color:#cde7ff; border:1px solid rgba(102,217,239,.5); background:rgba(102,217,239,.1); padding:4px 8px; border-radius:999px}
+    [data-theme="light"] .chip{color:#0369a1; border-color:#9bd0ff; background:#e6f3ff}
+
+    /* Sections */
+    section{padding:56px 0}
+    h2{font-size:24px; margin:0 0 22px}
+    .grid{display:grid; gap:18px; grid-template-columns:repeat(12,1fr)}
+    .card{grid-column:span 4; background:var(--panel); border:1px solid rgba(255,255,255,.06); border-radius:16px; padding:16px; transition:.18s transform, .18s box-shadow}
+    .card:hover{transform:translateY(-4px); box-shadow:0 18px 50px rgba(0,0,0,.28)}
+    [data-theme="light"] .card{border-color:#e8eef8}
+    .card h3{margin:6px 0 8px; font-size:18px}
+    .card p{margin:0; color:var(--muted)}
+
+    .progress{height:8px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden}
+    [data-theme="light"] .progress{background:#edf2ff}
+    .bar{height:100%; width:0; background:linear-gradient(90deg,var(--acc),#7ef7d1); border-radius:999px}
+
+    /* Showroom 3D */
+    .showroom{display:grid; grid-template-columns:1.1fr .9fr; gap:20px}
+    .viewer{border-radius:16px; overflow:hidden; border:1px dashed rgba(102,217,239,.4); background:var(--panel2); position:relative; min-height:380px}
+    .viewer .hint{position:absolute; left:12px; bottom:12px; font-size:12px; color:var(--muted)}
+    .viewer .overlay{position:absolute; inset:0; display:grid; place-items:center; color:var(--fg); opacity:.0; pointer-events:none; transition:.2s}
+    .viewer.drag .overlay{opacity:.9; background:rgba(102,217,239,.12)}
+    .viewer canvas{display:block}
+
+    /* Shader lab */
+    .shaderlab{display:grid; grid-template-columns:1.1fr .9fr; gap:20px}
+    .shaderwrap{border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,.06); background:var(--panel2); min-height:320px}
+
+    footer{padding:30px 0 60px; color:#a8b9d2; text-align:center}
+
+    /* Responsive */
+    @media(max-width:1040px){ .hero{grid-template-columns:1fr; gap:20px} .showroom,.shaderlab{grid-template-columns:1fr; } }
+    @media(max-width:640px){ .card{grid-column:span 12} .grid .card:nth-child(odd){grid-column:span 12} }
   </style>
 </head>
 <body>
-  <canvas id="scene"></canvas>
-  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-  <script>
-    const NAME = "VÂN KHÁNH";
+  <header>
+    <div class="wrapper">
+      <nav>
+        <div class="brand">Thịnh • Web Dev 3D</div>
+        <div class="spacer"></div>
+        <div class="nav">
+          <a href="#du-an">Dự án</a>
+          <a href="#showroom">Showroom 3D</a>
+          <a href="#shader">Shader Lab</a>
+          <a href="#ky-nang">Kỹ năng</a>
+          <a href="#lien-he">Liên hệ</a>
+          <button id="btn-theme" title="Đổi giao diện">Chế độ: Tối</button>
+          <button id="btn-perf">Hiệu năng: Cân bằng</button>
+        </div>
+      </nav>
+    </div>
+  </header>
 
-    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('scene'), antialias:true });
-    renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-    const scene = new THREE.Scene();
+  <main class="wrapper">
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div>
+        <h1>Portfolio đa chiều: Web hiện đại · 3D tương tác · Shader nghệ</h1>
+        <p>Trang này trình bày cả sản phẩm, quy trình và tính cách kỹ thuật: một <b>hero 3D</b> nhẹ nhàng, một <b>showroom</b> để xem model GLB, và một <b>shader lab</b> mini để nghịch hiệu ứng thời gian thực.</p>
+        <div class="cta">
+          <button class="btn acc" onclick="document.getElementById('showroom').scrollIntoView({behavior:'smooth'})">Vào Showroom</button>
+          <button class="btn" id="toggle-rotate">Tắt quay 3D</button>
+        </div>
+      </div>
+      <div class="panel3d">
+        <span class="chip">Three.js r160 · ACES • sRGB</span>
+        <canvas id="heroCanvas" aria-label="nền 3D"></canvas>
+      </div>
+    </section>
 
-    const camera = new THREE.PerspectiveCamera(55, innerWidth/innerHeight, 0.1, 5000);
-    camera.position.set(0,0,1000);
-    function onResize(){ renderer.setSize(innerWidth,innerHeight); camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); }
-    addEventListener('resize', onResize); onResize();
+    <!-- DỰ ÁN -->
+    <section id="du-an">
+      <h2>Dự án nổi bật</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>Quản lý KQ Học tập (Full‑stack)</h3>
+          <p>Python FastAPI + Tkinter desktop client, trực quan điểm số, nhập Excel, phân quyền, biểu đồ, mục tiêu GPA.</p>
+        </article>
+        <article class="card">
+          <h3>Web 3D Mini‑Showcase</h3>
+          <p>Three.js + postprocessing nhẹ, particles, tối ưu cho laptop i5‑10300H + GTX 1650.</p>
+        </article>
+        <article class="card">
+          <h3>Shop UX tốc độ cao</h3>
+          <p>Next.js + Tailwind, image optimization + SEO, Core Web Vitals ≥ 90.</p>
+        </article>
+      </div>
+    </section>
 
-    // star texture
-    function makeTex(color){
-      const c=document.createElement('canvas'); c.width=c.height=64; const ctx=c.getContext('2d');
-      const g=ctx.createRadialGradient(32,32,0,32,32,32);
-      g.addColorStop(0,color); g.addColorStop(0.3,color); g.addColorStop(1,'transparent');
-      ctx.fillStyle=g; ctx.fillRect(0,0,64,64);
-      return new THREE.CanvasTexture(c);
-    }
-    const texWhite=makeTex('#ffffff');
-    const texRed=makeTex('#ff1a1a');
+    <!-- SHOWROOM 3D: viewer mini + panel điều khiển -->
+    <section id="showroom">
+      <h2>Showroom 3D</h2>
+      <div class="showroom">
+        <div class="viewer" id="viewer">
+          <div class="overlay"><div>Thả <b>.glb/.gltf</b> vào khu vực này (có DRACO).<br/>Tự center + scale, có bóng đổ & grid.</div></div>
+          <div class="hint">• Kéo-thả model • Chuột để xoay • Scroll để zoom • Esc reset</div>
+        </div>
+        <div class="card" style="grid-column:span 1">
+          <h3>Điều khiển</h3>
+          <p>
+            <button class="btn" id="btn-reset-view">Reset</button>
+            <button class="btn" id="btn-wire">Wireframe</button>
+            <button class="btn" id="btn-autorot">Tắt quay</button>
+          </p>
+          <p style="color:var(--muted)">Gợi ý: nén texture bằng KTX2 để giảm dung lượng; tránh model quá 50MB cho trình duyệt phổ thông.</p>
+        </div>
+      </div>
+    </section>
 
-    // background stars
-    (function(){
-      const count=6000, radius=3500; const pos=new Float32Array(count*3);
-      for(let i=0;i<count;i++){
-        const r=radius*Math.cbrt(Math.random());
-        const th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1);
-        pos[i*3]=r*Math.sin(ph)*Math.cos(th);
-        pos[i*3+1]=r*Math.sin(ph)*Math.sin(th);
-        pos[i*3+2]=r*Math.cos(ph);
+    <!-- SHADER LAB: custom shader với lil-gui -->
+    <section id="shader">
+      <h2>Shader Lab (Ripple • Noise • Gradient)</h2>
+      <div class="shaderlab">
+        <div class="shaderwrap" id="shaderWrap"></div>
+        <div class="card">
+          <h3>Tham số</h3>
+          <p>Điều chỉnh tốc độ, màu sắc, lưới… Shader chạy trên GPU nên rất mượt.</p>
+          <div id="shaderParams" style="color:var(--muted)"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KỸ NĂNG -->
+    <section id="ky-nang">
+      <h2>Kỹ năng & công cụ</h2>
+      <div class="grid">
+        <div class="card" style="grid-column:span 6">
+          <h3>Front‑end</h3>
+          <div class="progress"><div class="bar" style="width:92%"></div></div>
+          <p>HTML/CSS/JS, React/Next, TypeScript, Three.js/WebGL/WebGPU cơ bản.</p>
+        </div>
+        <div class="card" style="grid-column:span 6">
+          <h3>Back‑end & DevOps</h3>
+          <div class="progress"><div class="bar" style="width:78%"></div></div>
+          <p>FastAPI/Django, SQL Server/PostgreSQL, Docker, CI/CD, giám sát.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIÊN HỆ -->
+    <section id="lien-he">
+      <h2>Liên hệ</h2>
+      <div class="grid">
+        <div class="card" style="grid-column:span 6">
+          <form onsubmit="event.preventDefault(); alert('Đã gửi (demo). Thay endpoint thật để hoạt động thực tế.)')">
+            <label>Tên<br/><input required style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--fg)"></label>
+            <div style="height:10px"></div>
+            <label>Email<br/><input type="email" required style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--fg)"></label>
+            <div style="height:10px"></div>
+            <label>Nội dung<br/><textarea rows="4" required style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--fg)"></textarea></label>
+            <div style="height:12px"></div>
+            <button class="btn acc" type="submit">Gửi</button>
+          </form>
+        </div>
+        <div class="card" style="grid-column:span 6">
+          <h3>Thông tin</h3>
+          <p>Email: you@example.com<br/>GitHub: github.com/yourid<br/>Địa điểm: Việt Trì</p>
+          <p style="color:var(--muted)">Tùy biến theo thực tế.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 • Thiết kế tối giản, 3D tương tác nhẹ, tập trung nội dung.
+  </footer>
+
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+    import { OrbitControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+    import { GLTFLoader } from 'https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
+    import { DRACOLoader } from 'https://unpkg.com/three@0.160.0/examples/jsm/loaders/DRACOLoader.js';
+    import GUI from 'https://unpkg.com/three@0.160.0/examples/jsm/libs/lil-gui.module.min.js';
+
+    // ===== Theme & Perf toggles =====
+    const root = document.documentElement; const body = document.body;
+    const btnTheme = document.getElementById('btn-theme');
+    btnTheme.addEventListener('click', ()=>{
+      const light = body.getAttribute('data-theme') === 'light';
+      body.setAttribute('data-theme', light ? 'dark' : 'light');
+      btnTheme.textContent = 'Chế độ: ' + (light? 'Tối' : 'Sáng');
+    });
+
+    let perfMode = 1; // 0 chất lượng, 1 cân bằng, 2 hiệu năng
+    const btnPerf = document.getElementById('btn-perf');
+    btnPerf.addEventListener('click', ()=>{
+      perfMode = (perfMode + 1) % 3;
+      btnPerf.textContent = 'Hiệu năng: ' + ['Chất lượng','Cân bằng','Hiệu năng'][perfMode];
+      resizeHero(); resizeViewer(); resizeShader();
+    });
+
+    // ===== HERO 3D Scene =====
+    const heroCanvas = document.getElementById('heroCanvas');
+    const heroScene = new THREE.Scene(); heroScene.background = null;
+    const heroCamera = new THREE.PerspectiveCamera(60, 1, 0.1, 100); heroCamera.position.set(3.6, 1.8, 5.2);
+    const heroRenderer = new THREE.WebGLRenderer({ canvas: heroCanvas, antialias:true, alpha:true, powerPreference:'high-performance' });
+    heroRenderer.outputColorSpace = THREE.SRGBColorSpace; heroRenderer.toneMapping = THREE.ACESFilmicToneMapping; heroRenderer.toneMappingExposure = 1.0;
+
+    const heroControls = new OrbitControls(heroCamera, heroRenderer.domElement); heroControls.enableDamping = true; heroControls.minDistance=2.2; heroControls.maxDistance=10; heroControls.maxPolarAngle=Math.PI*0.66;
+
+    heroScene.add(new THREE.AmbientLight(0xbfd4ff,.6)); const dirL = new THREE.DirectionalLight(0xffffff,1.1); dirL.position.set(4,6,2); heroScene.add(dirL);
+
+    // Particles
+    const starGeo = new THREE.BufferGeometry(); const N = 1200; const pos = new Float32Array(N*3);
+    for(let i=0;i<N;i++){ const r=6+Math.random()*8; const t=Math.random()*Math.PI*2; const p=(Math.random()-.5)*Math.PI/6; pos[i*3]=Math.cos(t)*r; pos[i*3+1]=Math.sin(p)*r*0.3; pos[i*3+2]=Math.sin(t)*r; }
+    starGeo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+    const starMat = new THREE.PointsMaterial({ size:0.04, color:0x7ed6ff, transparent:true, opacity:.85 });
+    const stars = new THREE.Points(starGeo, starMat); heroScene.add(stars);
+
+    // Iconic meshes
+    const group = new THREE.Group(); heroScene.add(group);
+    const mat1 = new THREE.MeshStandardMaterial({ color:0x66d9ef, metalness:.6, roughness:.35 });
+    const mat2 = new THREE.MeshStandardMaterial({ color:0xa6e22e, metalness:.2, roughness:.6 });
+    const mat3 = new THREE.MeshStandardMaterial({ color:0xffb86c, metalness:.4, roughness:.45 });
+    const box = new THREE.Mesh(new THREE.BoxGeometry(1.2,.8,.2), mat1); box.position.set(0,1,0); box.rotation.set(.2,.4,0);
+    const torus = new THREE.Mesh(new THREE.TorusKnotGeometry(.6,.18,160,24), mat2); torus.position.set(1.6,.8,-.6);
+    const ico = new THREE.Mesh(new THREE.IcosahedronGeometry(.7,1), mat3); ico.position.set(-1.4,.9,.4);
+    group.add(box, torus, ico);
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(20,10), new THREE.MeshStandardMaterial({ color:0x0e141f, metalness:.1, roughness:.95 })); plane.rotation.x=-Math.PI/2; plane.position.y=0; heroScene.add(plane);
+
+    let autoRotate = true; document.getElementById('toggle-rotate').addEventListener('click',()=>{ autoRotate=!autoRotate; document.getElementById('toggle-rotate').textContent=(autoRotate?'Tắt':'Bật')+' quay 3D'; });
+
+    function resizeHero(){ const rect=heroCanvas.getBoundingClientRect(); const w=Math.max(300,rect.width), h=Math.max(260,rect.height); heroCamera.aspect=w/h; heroCamera.updateProjectionMatrix(); heroRenderer.setSize(w,h,false); heroRenderer.setPixelRatio(Math.min(window.devicePixelRatio, perfMode===2?1:1.6)); }
+    window.addEventListener('resize', resizeHero); resizeHero();
+
+    const heroClock = new THREE.Clock();
+    function heroLoop(){ const t=heroClock.getElapsedTime(); if(autoRotate){ group.rotation.y=t*0.35; ico.rotation.x=t*0.6; torus.rotation.y=-t*0.5; } stars.rotation.y=t*0.02; heroControls.update(); heroRenderer.render(heroScene, heroCamera); requestAnimationFrame(heroLoop); } heroLoop();
+
+    // ===== SHOWROOM Viewer =====
+    const viewer = document.getElementById('viewer');
+    const vScene = new THREE.Scene(); vScene.background = null;
+    const vCamera = new THREE.PerspectiveCamera(60, 1, .1, 100); vCamera.position.set(4.2,2.4,5.2);
+    const vRenderer = new THREE.WebGLRenderer({ antialias:true, alpha:true, powerPreference:'high-performance' }); viewer.appendChild(vRenderer.domElement);
+    vRenderer.outputColorSpace = THREE.SRGBColorSpace; vRenderer.toneMapping = THREE.ACESFilmicToneMapping; vRenderer.toneMappingExposure = 1.05;
+    const vControls = new OrbitControls(vCamera, vRenderer.domElement); vControls.enableDamping=true; vControls.target.set(0,.8,0);
+
+    const vHemi = new THREE.HemisphereLight(0xbfd4ff,0x202225,.7); vScene.add(vHemi);
+    const vDir = new THREE.DirectionalLight(0xffffff,1.05); vDir.position.set(5,7,3); vScene.add(vDir);
+
+    const vGround = new THREE.Mesh(new THREE.PlaneGeometry(100,100), new THREE.MeshStandardMaterial({ color:0x0e141f, roughness:.95 })); vGround.rotation.x=-Math.PI/2; vGround.position.y=0; vGround.receiveShadow=true; vScene.add(vGround);
+    const vGrid = new THREE.GridHelper(50,50,0x3a4357,0x1e2635); vGrid.position.y=0.01; vScene.add(vGrid);
+
+    const vGroup = new THREE.Group(); vScene.add(vGroup);
+    const demo = new THREE.Mesh(new THREE.SphereGeometry(.75,48,48), new THREE.MeshStandardMaterial({ color:0x66d9ef, metalness:.55, roughness:.35 })); demo.position.set(0,.9,0); vGroup.add(demo);
+
+    let autorotViewer = true; const btnAutorot = document.getElementById('btn-autorot'); btnAutorot.addEventListener('click',()=>{ autorotViewer=!autorotViewer; btnAutorot.textContent = (autorotViewer?'Tắt':'Bật')+' quay'; });
+
+    function resizeViewer(){ const r=viewer.getBoundingClientRect(); const w=Math.max(300,r.width), h=Math.max(340,r.height); vCamera.aspect=w/h; vCamera.updateProjectionMatrix(); vRenderer.setSize(w,h,false); vRenderer.setPixelRatio(Math.min(window.devicePixelRatio, perfMode===2?1:1.5)); }
+    window.addEventListener('resize', resizeViewer); resizeViewer();
+
+    const dloader = new DRACOLoader(); dloader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+    const gloader = new GLTFLoader(); gloader.setDRACOLoader(dloader);
+
+    function centerAndScaleToUnit(obj, target=2.4){ const box3 = new THREE.Box3().setFromObject(obj); const size=new THREE.Vector3(); box3.getSize(size); const center=new THREE.Vector3(); box3.getCenter(center); const maxDim=Math.max(size.x,size.y,size.z)||1; const s=target/maxDim; obj.position.sub(center); obj.scale.setScalar(s); }
+
+    let model=null; function clearModel(){ if(!model) return; model.traverse(o=>{ if(o.isMesh){ o.geometry.dispose(); if(Array.isArray(o.material)){ o.material.forEach(m=>m.dispose()); } else o.material?.dispose?.(); } }); vScene.remove(model); model=null; }
+
+    // Drag & drop
+    const overlay = viewer.querySelector('.overlay');
+    ;['dragenter','dragover'].forEach(ev=> viewer.addEventListener(ev, e=>{ e.preventDefault(); viewer.classList.add('drag'); }));
+    ;['dragleave','drop'].forEach(ev=> viewer.addEventListener(ev, e=>{ e.preventDefault(); viewer.classList.remove('drag'); }));
+    viewer.addEventListener('drop', (e)=>{
+      const file = e.dataTransfer.files?.[0]; if(!file) return;
+      const ext = file.name.toLowerCase().split('.').pop(); if(ext!=='glb' && ext!=='gltf'){ alert('Vui lòng thả .glb/.gltf'); return; }
+      const reader = new FileReader(); reader.onload = (ev)=>{ const buf = ev.target.result; gloader.parse(buf,'',(res)=>{ clearModel(); model=res.scene||res.scenes?.[0]; model.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; } }); centerAndScaleToUnit(model,2.4); vScene.add(model); },(err)=>{ alert('Lỗi tải model: '+err.message); }); }; reader.readAsArrayBuffer(file);
+    });
+
+    document.getElementById('btn-reset-view').addEventListener('click',()=>{ vControls.reset(); vCamera.position.set(4.2,2.4,5.2); vControls.target.set(0,.8,0); });
+    let wire=false; document.getElementById('btn-wire').addEventListener('click',()=>{ wire=!wire; (model||vGroup).traverse(o=>{ if(o.isMesh){ o.material.wireframe=wire; o.material.needsUpdate=true; } }); });
+
+    const vClock=new THREE.Clock(); function vLoop(){ const t=vClock.getElapsedTime(); if(autorotViewer){ vGroup.rotation.y = t*0.25; } vControls.update(); vRenderer.render(vScene, vCamera); requestAnimationFrame(vLoop);} vLoop();
+
+    // ===== SHADER LAB =====
+    const shaderWrap = document.getElementById('shaderWrap');
+    const sRenderer = new THREE.WebGLRenderer({ antialias:true, alpha:true, powerPreference:'high-performance' }); shaderWrap.appendChild(sRenderer.domElement);
+    const sScene = new THREE.Scene(); const sCamera = new THREE.OrthographicCamera(-1,1,1,-1,0,1); sScene.add(sCamera);
+
+    const sUniforms = { u_time:{ value:0 }, u_speed:{ value:1.0 }, u_mix:{ value:0.65 }, u_grid:{ value:0.25 }, u_colorA:{ value:new THREE.Color(0x66d9ef) }, u_colorB:{ value:new THREE.Color(0xa6e22e) } };
+    const quad = new THREE.Mesh(new THREE.PlaneGeometry(2,2), new THREE.ShaderMaterial({ uniforms:sUniforms, vertexShader:`
+      varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position,1.0); }
+    `, fragmentShader:`
+      precision highp float; varying vec2 vUv; uniform float u_time,u_speed,u_mix,u_grid; uniform vec3 u_colorA,u_colorB;
+      // noise đơn giản
+      float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
+      float noise(vec2 p){ vec2 i=floor(p), f=fract(p); float a=hash(i), b=hash(i+vec2(1.,0.)), c=hash(i+vec2(0.,1.)), d=hash(i+vec2(1.,1.)); vec2 u=f*f*(3.-2.*f); return mix(a,b,u.x)+ (c-a)*u.y*(1.-u.x) + (d-b)*u.x*u.y; }
+      void main(){
+        vec2 uv = vUv*2.0-1.0; float t = u_time*u_speed*0.35;
+        // ripple
+        float r = length(uv);
+        float ripple = 0.25*sin(12.0*r - t*6.0);
+        // noise động
+        float n = noise(uv*3.0 + t*0.6);
+        float m = smoothstep(0.2, 0.8, n + ripple);
+        vec3 col = mix(u_colorA, u_colorB, mix(m, n, u_mix));
+        // grid mảnh
+        vec2 g = abs(fract((uv+1.0)*10.0)-0.5)/fwidth((uv+1.0)*10.0);
+        float grid = 1.0 - step(1.0, min(g.x,g.y));
+        col = mix(col, vec3(1.0), grid * u_grid * 0.4);
+        gl_FragColor = vec4(col, 1.0);
       }
-      const g=new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos,3));
-      const m=new THREE.PointsMaterial({ map:texWhite, size:1.2, transparent:true, depthWrite:false, opacity:0.9 });
-      scene.add(new THREE.Points(g,m));
-    })();
+    ` }));
+    sScene.add(quad);
 
-    // heart 3D explicit parametric sampling
-    // sử dụng công thức tham số để tạo bề mặt trái tim 3D
-    function heart3DPoints(n){
-      const pts=new Float32Array(n*3);
-      for(let i=0;i<n;i++){
-        const u=Math.random()*Math.PI*2;
-        const v=Math.random()*Math.PI;
-        const r=1 - Math.sin(v);
-        const x=r*Math.cos(u);
-        const y=r*Math.sin(u);
-        const z=Math.cos(v);
-        pts[i*3]=x*200;
-        pts[i*3+1]=y*200+150;
-        pts[i*3+2]=z*200;
-      }
-      return pts;
-    }
+    function resizeShader(){ const r=shaderWrap.getBoundingClientRect(); const w=Math.max(300,r.width), h=Math.max(280,r.height); sRenderer.setSize(w,h,false); sRenderer.setPixelRatio(Math.min(window.devicePixelRatio, perfMode===2?1:1.6)); }
+    window.addEventListener('resize', resizeShader); resizeShader();
 
-    const heartPos=heart3DPoints(25000);
-    const heartGeom=new THREE.BufferGeometry(); heartGeom.setAttribute('position', new THREE.BufferAttribute(heartPos,3));
-    const heartMat=new THREE.PointsMaterial({ map:texRed, size:2.2, transparent:true, blending:THREE.AdditiveBlending, depthWrite:false, opacity:1 });
-    const heart=new THREE.Points(heartGeom,heartMat);
-    scene.add(heart);
+    const sClock = new THREE.Clock(); function sLoop(){ sUniforms.u_time.value = sClock.getElapsedTime(); sRenderer.render(sScene, sCamera); requestAnimationFrame(sLoop);} sLoop();
 
-    // text points
-    function textPoints(text){
-      const W=1600,H=400; const c=document.createElement('canvas'); c.width=W; c.height=H; const ctx=c.getContext('2d');
-      ctx.fillStyle='#fff'; ctx.font='900 240px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillText(text,W/2,H/2);
-      const img=ctx.getImageData(0,0,W,H).data; const pts=[];
-      for(let y=0;y<H;y+=3){ for(let x=0;x<W;x+=3){ if(img[(y*W+x)*4+3]>128) pts.push([(x-W/2)*0.7,(H/2-y)*0.7-250]); } }
-      const arr=new Float32Array(pts.length*3);
-      for(let i=0;i<pts.length;i++){ arr[i*3]=pts[i][0]; arr[i*3+1]=pts[i][1]; arr[i*3+2]=(Math.random()-.5)*20; }
-      return arr;
-    }
-    const namePos=textPoints(NAME);
-    const nameGeom=new THREE.BufferGeometry(); nameGeom.setAttribute('position', new THREE.BufferAttribute(namePos,3));
-    const nameMat=new THREE.PointsMaterial({ map:texWhite, size:2.0, transparent:true, blending:THREE.AdditiveBlending, depthWrite:false });
-    const nameMesh=new THREE.Points(nameGeom,nameMat);
-    scene.add(nameMesh);
+    // GUI tham số shader
+    const gui = new GUI({ title:'Shader Params' }); gui.domElement.style.position='fixed'; gui.domElement.style.right='16px'; gui.domElement.style.bottom='16px';
+    gui.add(sUniforms.u_speed,'value',0.0,3.0,0.01).name('Speed');
+    gui.add(sUniforms.u_mix,'value',0.0,1.0,0.01).name('Mix');
+    gui.add(sUniforms.u_grid,'value',0.0,1.0,0.01).name('Grid');
+    gui.addColor({color:'#66d9ef'},'color').name('Color A').onChange(v=> sUniforms.u_colorA.value.set(v));
+    gui.addColor({color:'#a6e22e'},'color').name('Color B').onChange(v=> sUniforms.u_colorB.value.set(v));
 
-    // animation
-    const t0=performance.now();
-    function animate(){
-      requestAnimationFrame(animate);
-      const t=(performance.now()-t0)/1000;
-      const beat=1+0.07*Math.sin(t*3);
-      heart.scale.setScalar(beat);
-      renderer.render(scene,camera);
-    }
-    animate();
+    // Progress bars animate on view
+    const bars = document.querySelectorAll('.bar'); const io = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.style.transition='width 1.2s ease'; } }); }); bars.forEach(b=> io.observe(b));
   </script>
 </body>
 </html>
